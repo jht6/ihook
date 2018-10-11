@@ -1,0 +1,56 @@
+{
+  "name": "ihook",
+  "version": "0.0.1",
+  "description": "Intelligent git hook: easy-to-use, powerful and programmable",
+  "main": "index.js",
+  "scripts": {
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --timeout 60000",
+    "example-fail": "echo \"This is the example hook, I exit with 1\" && exit 1",
+    "example-pass": "echo \"This is the example hook, I exit with 0\" && exit 0",
+    "install": "node install.js",
+    "lint": "eslint .",
+    "test": "mocha --timeout 60000",
+    "ut": "./node_modules/.bin/mocha ./test/unit/index.js --timeout 60000",
+    "rt": "./node_modules/.bin/mocha ./test/regression/index.js --timeout 60000",
+    "rt-s": "./node_modules/.bin/mocha ./test/regression/index.js --timeout 60000 --not-delete-sandbox",
+    "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- test.js",
+    "uninstall": "node uninstall.js",
+    "pce-install-foreach": "node ./node_modules/pre-commit-enhanced/scripts/install-foreach.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Orange-J/ihook.git"
+  },
+  "keywords": [
+    "git",
+    "hooks",
+    "npm",
+    "pre-commit",
+    "precommit",
+    "run",
+    "test",
+    "development"
+  ],
+  "author": "OrangeJ <juhaotian@foxmail.com>",
+  "homepage": "https://github.com/Orange-J/ihook",
+  "license": "MIT",
+  "dependencies": {
+    "cross-spawn": "^5.0.1",
+    "spawn-sync": "^1.0.15",
+    "which": "1.2.x"
+  },
+  "devDependencies": {
+    "assume": "~1.5.0",
+    "eslint": "^5.4.0",
+    "istanbul": "0.4.x",
+    "mocha": "~3.3.0",
+    "pre-commit-enhanced": "git://github.com/Orange-J/ihook.git"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ]
+}

@@ -1,0 +1,6 @@
+node_modules
+npm-debug.log
+coverage
+
+# A directory that will be created temporarily for testing, and will be remove when testing ends.
+sandbox
