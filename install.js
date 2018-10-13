@@ -3,6 +3,8 @@
 //
 // Compatibility with older node.js as path.exists got moved to `fs`.
 //
+const pleaseUpgradeNode = require('please-upgrade-node');
+const pkg = require('./package.json');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -10,6 +12,14 @@ const hook = path.join(__dirname, 'hook');
 const root = path.resolve(__dirname, '..', '..');
 const exists = fs.existsSync;
 const utils = require('./common/utils');
+
+// Node version isn't supported, skip install
+pleaseUpgradeNode(pkg, {
+    exitCode: 0,
+    message: function (requiredVersion) {
+        return `ihook > ihook requires Node ${requiredVersion} , skipping Git hooks installation.`;
+    }
+});
 
 //
 // Gather the location of the possible hidden .git directory, the hooks
