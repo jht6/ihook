@@ -1,12 +1,12 @@
-# pre-commit-enhanced
+# ihook
 
-[![Version npm][version]](http://browsenpm.org/package/pre-commit-enhanced)
+[![Version npm][version]](http://browsenpm.org/package/ihook)
 
-[version]: https://img.shields.io/npm/v/pre-commit-enhanced.svg?style=flat-square
+[version]: https://img.shields.io/npm/v/ihook.svg?style=flat-square
 
 [中文 README](README-zh_CN.md)
 
-**pre-commit-enhanced** is a pre-commit hook installer for `git` based on [pre-commit](https://github.com/observing/pre-commit). It will ensure that
+**ihook** is a git hook installer. It will ensure that
 your `npm test` (or other specified scripts) passes before you can commit your
 changes. This all conveniently configured in your `package.json`.
 
@@ -15,12 +15,12 @@ But don't worry, you can still force a commit by telling `git` to skip the
 
 ### Installation
 
-It's advised to install the **pre-commit-enhanced** module as a `devDependencies` in your
+It's advised to install the **ihook** module as a `devDependencies` in your
 `package.json` as you only need this for development purposes. To install the
 module simply run:
 
 ```
-npm install --save-dev pre-commit-enhanced
+npm install --save-dev ihook
 ```
 
 To install it as `devDependency`. When this module is installed it will override
@@ -29,10 +29,10 @@ the existing `pre-commit` file in your `.git/hooks` folder. Existing
 
 ### Configuration
 
-`pre-commit-enhanced` will try to run your `npm test` command in the directory contians `package.json` by default unless it's the default value that is set by the `npm
+`ihook` will try to run your `npm test` command in the directory contians `package.json` by default unless it's the default value that is set by the `npm
 init` script. 
 
-But `pre-commit-enhanced` is not limited to just running your `npm test`'s during the
+But `ihook` is not limited to just running your `npm test`'s during the
 commit hook. It's also capable of running every other script that you've
 specified in your `package.json` "scripts" field. So before people commit you
 could ensure that:
