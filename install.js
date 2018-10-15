@@ -149,12 +149,12 @@ if (!json.scripts) {
 
 json.scripts['pce-install-foreach'] = [
     'node ',
-    './node_modules/pre-commit-enhanced/scripts/install-foreach.js'
+    './node_modules/ihook/scripts/install-foreach.js'
 ].join('');
 
 json.scripts['pce-install-batch'] = [
     'node ',
-    './node_modules/pre-commit-enhanced/scripts/install-batch.js'
+    './node_modules/ihook/scripts/install-batch.js'
 ].join('');
 
 const spaceCount = 2;

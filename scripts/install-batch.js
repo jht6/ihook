@@ -83,7 +83,7 @@ BatchInstaller.prototype.writeJsonToFile = function (json) {
 };
 
 BatchInstaller.prototype.copyBatchToPkgJsonDir = function () {
-    execSync(`cp ./node_modules/pre-commit-enhanced/scripts/batch-callback.js ./pce-batch-callback.js`);
+    execSync(`cp ./node_modules/ihook/scripts/batch-callback.js ./pce-batch-callback.js`);
     utils.log([
         `Success: Create "pce-batch-callback.js" besize the package.json.`,
         `  You should commit the "pce-batch-callback.js" file to your repository.`

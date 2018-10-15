@@ -15,8 +15,8 @@
     "rt-s": "./node_modules/.bin/mocha ./test/regression/index.js --timeout 60000 --not-delete-sandbox",
     "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- test.js",
     "uninstall": "node uninstall.js",
-    "pce-install-foreach": "node ./node_modules/pre-commit-enhanced/scripts/install-foreach.js",
-    "pce-install-batch": "node ./node_modules/pre-commit-enhanced/scripts/install-batch.js"
+    "pce-install-foreach": "node ./node_modules/ihook/scripts/install-foreach.js",
+    "pce-install-batch": "node ./node_modules/ihook/scripts/install-batch.js"
   },
   "repository": {
     "type": "git",
@@ -46,7 +46,7 @@
     "eslint": "^5.4.0",
     "istanbul": "0.4.x",
     "mocha": "~3.3.0",
-    "pre-commit-enhanced": "git://github.com/Orange-J/ihook.git"
+    "ihook": "git://github.com/Orange-J/ihook.git"
   },
   "engines": {
     "node": ">=6.0.0"

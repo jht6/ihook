@@ -40,7 +40,7 @@ try {
         `cd ${TESTING_DIR_NAME}`,
         `mkdir node_modules`,
         `cd node_modules`,
-        `mkdir pre-commit-enhanced`,
+        `mkdir ihook`,
         `cd ..`,
         `echo node_modules > .gitignore`,
         `echo {"pre-commit":["markHookOk"],"scripts":{"markHookOk":"touch hook_run_ok"}} > package.json`,
@@ -63,7 +63,7 @@ try {
         'uninstall.js',
         'package.json'
     ].forEach(name => {
-        execSync(`cp -a ./${name} ./${TESTING_DIR_NAME}/node_modules/pre-commit-enhanced`);
+        execSync(`cp -a ./${name} ./${TESTING_DIR_NAME}/node_modules/ihook`);
     });
 } catch (e) {
     utils.log(`Error occured when copy code file to sandbox, skip testing.`);
@@ -73,7 +73,7 @@ try {
 // Install dependence for copied code.
 try {
     execSync([
-        `cd ${TESTING_DIR_NAME}/node_modules/pre-commit-enhanced`,
+        `cd ${TESTING_DIR_NAME}/node_modules/ihook`,
         `npm install --production`
     ].join(` && `));
 } catch (e) {
@@ -89,7 +89,7 @@ describe('regression - install.js', function () {
         try {
             execSync([
                 `cd ${TESTING_DIR_NAME}`,
-                `node ./node_modules/pre-commit-enhanced/install.js`
+                `node ./node_modules/ihook/install.js`
             ].join(` && `));
         } catch (e) {
             ok = false;
@@ -111,10 +111,10 @@ describe('regression - install.js', function () {
         assume(json).is.a('object');
         assume(json.scripts).is.a('object');
         assume(json.scripts['pce-install-foreach']).equals(
-            'node ./node_modules/pre-commit-enhanced/scripts/install-foreach.js'
+            'node ./node_modules/ihook/scripts/install-foreach.js'
         );
         assume(json.scripts['pce-install-batch']).equals(
-            'node ./node_modules/pre-commit-enhanced/scripts/install-batch.js'
+            'node ./node_modules/ihook/scripts/install-batch.js'
         );
     });
 });

@@ -43,5 +43,5 @@ if [[ $* == *--dry-run* ]]; then
 else
   GIT_ROOT_DIR=$(pwd)
   cd $(dirname $(readlink -f "$0"))
-  "$BINARY" "$("$BINARY" -e "console.log(require.resolve('pre-commit-enhanced'))")" "$GIT_ROOT_DIR"
+  "$BINARY" "$("$BINARY" -e "console.log(require.resolve('ihook'))")" "$GIT_ROOT_DIR"
 fi

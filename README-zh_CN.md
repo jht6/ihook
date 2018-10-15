@@ -1,4 +1,4 @@
-# pre-commit-enhanced
+# ihook
 
 [![Version npm][version]](http://browsenpm.org/package/ihook)
 
