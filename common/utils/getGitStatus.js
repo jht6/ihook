@@ -11,7 +11,7 @@ const getGitRootDirPath = require('./getGitRootDirPath');
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *                     IMPORTANT
  *  This function depends on this file's position.
- *  If this file is move, notice to check the code.
+ *  If this file is moved, notice to check the code.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *
  * @return {String} string of git status
