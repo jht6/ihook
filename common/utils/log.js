@@ -17,20 +17,16 @@ function log(lines, exitCode, opt, isTesting) {
     }
 
     let prefix = opt.noColor ?
-        `${LOG_PREFIX} ` :
-        `\u001b[38;5;166m${LOG_PREFIX}\u001b[39;49m `;
+        `${LOG_PREFIX}` :
+        `\u001b[38;5;166m${LOG_PREFIX}\u001b[39;49m`;
 
     lines.push(''); // Whitespace at the end of the log.
     lines.unshift(''); // Whitespace at the beginning.
 
-    lines = lines.map(line => prefix + line);
+    lines = lines.map(line => line ? prefix + line : line);
 
     lines.forEach(line => {
-        if (typeof exitCode === 'number' && exitCode > 0) {
-            console.error(line);
-        } else {
-            console.log(line);
-        }
+        console.log(line);
     });
 
     if (isTesting) {
