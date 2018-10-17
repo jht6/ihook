@@ -1,8 +1,10 @@
 /**
  * This prevents the case where someone would want to debug a node_module that has
- * husky as devDependency and run npm install from node_modules directory
+ * ihook as devDependency and run npm install from node_modules directory
+ * @param {String} ihookDir absolute path of ihook's dir
+ * @return {Boolean}
  */
-function isInNodeModules(dir) {
+function isInNestedNodeModules(ihookDir) {
     // INIT_CWD holds the full path you were in when you ran npm install (supported also by yarn and pnpm)
     // See https://docs.npmjs.com/cli/run-script
     if (process.env.INIT_CWD) {
@@ -10,7 +12,7 @@ function isInNodeModules(dir) {
     }
 
     // Old technique
-    return (dir.match(/node_modules/g) || []).length > 1;
+    return (ihookDir.match(/node_modules/g) || []).length > 1;
 }
 
-module.exports = isInNodeModules;
+module.exports = isInNestedNodeModules;

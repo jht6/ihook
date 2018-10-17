@@ -8,7 +8,7 @@ const readPackageJson = require('./readPackageJson');
 const modifyPackageJson = require('./modifyPackageJson');
 const addPreCommitItem = require('./addPreCommitItem');
 const transPathWinToUnix = require('./transPathWinToUnix');
-const isInNodeModules = require('./isInNodeModules');
+const isInNestedNodeModules = require('./isInNestedNodeModules');
 
 module.exports = {
     getPackageJsonDirPath,
@@ -20,7 +20,7 @@ module.exports = {
     modifyPackageJson,
     addPreCommitItem,
     transPathWinToUnix,
-    isInNodeModules
+    isInNestedNodeModules
 };
 
 /**
