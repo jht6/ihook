@@ -327,7 +327,7 @@ Hook.prototype.printTime = function (timeList) {
 
     ret += `Total: ${formatTime(sum)}s\n`;
 
-    console.log(`====================\npre-commit consuming time:\n\n${ret}====================\n`);
+    console.log(`====================\nihook consuming time:\n\n${ret}====================\n`);
 };
 
 /**
