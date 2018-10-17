@@ -46,6 +46,7 @@ describe('common/utils', function () {
             assume(ret.lines).is.a('array');
             assume(ret.lines.length).equals(5);
             assume(/a$/.test(ret.lines[1])).true();
+            assume(/b$/.test(ret.lines[2])).true();
             assume(/c$/.test(ret.lines[3])).true();
         });
 
@@ -55,19 +56,20 @@ describe('common/utils', function () {
             assume(ret.lines).is.a('array');
             assume(ret.lines.length).equals(5);
             assume(/a$/.test(ret.lines[1])).true();
+            assume(/b$/.test(ret.lines[2])).true();
             assume(/c$/.test(ret.lines[3])).true();
         });
 
         it('default has color', function () {
             let ret = utils.log('test', null, null, true);
-            assume(ret.lines[0]).contains('\u001b');
+            assume(ret.lines[1]).contains('\u001b');
         });
 
         it('can remove color when "noColor" is set', function () {
             let ret = utils.log('test', null, {
                 noColor: true
             }, true);
-            assume(ret.lines[0].indexOf('\u001b')).equals(-1);
+            assume(ret.lines[1].indexOf('\u001b')).equals(-1);
         });
     });
 
