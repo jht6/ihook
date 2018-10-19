@@ -10,6 +10,7 @@ const root = path.resolve(__dirname, '..', '..');
 const exists = fs.existsSync;
 const utils = require('./common/utils');
 const log = utils.log;
+const isInNestedNodeModules = utils.isInNestedNodeModules;
 
 
 // Node version isn't supported, skip install
@@ -19,6 +20,12 @@ pleaseUpgradeNode(pkg, {
         return `ihook > ihook requires Node ${requiredVersion} , skipping Git hooks installation.`;
     }
 });
+
+
+// Prevent installing hooks if ihook is in nested node_modules
+if (isInNestedNodeModules(__dirname)) {
+    log('Trying to install in nested node_modules directory, skipping Git hooks installation.', 0);
+}
 
 
 // Gather the location of the possible hidden .git directory, the hooks
