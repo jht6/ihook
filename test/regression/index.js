@@ -45,7 +45,9 @@ try {
         `echo node_modules > .gitignore`,
         `echo {"pre-commit":["markHookOk"],"scripts":{"markHookOk":"touch hook_run_ok"}} > package.json`,
         `echo init > commited`,
-        `git init`
+        `git init`,
+        `git config user.name "tmp"`,
+        `git config user.email "test@test.com"`
     ].join(` && `));
 } catch (e) {
     utils.log(`Can't create file construct in "sandbox" directory, skip testing.`);
