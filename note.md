@@ -3,8 +3,7 @@ TODO:
 2018.10.10
 
 1. batch模式不再需要执行npm run pce-install-batch后才能使用, 直接通过配置文件来声明
-2. 是开一个新的仓库, 还是从现有仓库升级大版本? 有待决定..
-3. 配置文件名: pce.config.js    内容如下:
+2. 配置文件名: ihook.config.js    内容如下:
 
 ```
 module.exports = {
@@ -41,7 +40,7 @@ command中的<paths>是文件路径参数占位符
 filter: 过滤器函数, 或者'.eslintignore'之类的字符串来表示用该文件作为排除列表
 useRelativePath: <paths>参数中的路径是否用相对路径
 
-4. pce.config.js的hooks设计为一个对象, 为后续支持其他钩子(如pre-push)预留可扩展空间
+4. ihook.config.js的hooks设计为一个对象, 为后续支持其他钩子(如pre-push)预留可扩展空间
 
 ============================
 
