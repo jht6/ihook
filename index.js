@@ -4,8 +4,8 @@ const spawn = require('cross-spawn');
 const which = require('which');
 const path = require('path');
 const util = require('util');
-const tty = require('tty');
 const utils = require('./common/utils');
+const { LOG_PREFIX } = require('./common/const');
 
 /**
  * Representation of a hook runner.
@@ -59,19 +59,6 @@ Object.defineProperty(Hook.prototype, 'silent', {
 });
 
 /**
- * Boolean indicating if we're allowed and capable of outputting colors into the
- * terminal.
- *
- * @type {Boolean}
- * @public
- */
-Object.defineProperty(Hook.prototype, 'colors', {
-    get: function colors() {
-        return this.config.colors !== false && tty.isatty(process.stdout.fd);
-    }
-});
-
-/**
  * Execute a binary.
  *
  * @param {String} bin Binary that needs to be executed
@@ -96,7 +83,7 @@ Hook.prototype.parse = function parse() {
     let pre = this.json['pre-commit'] || this.json.precommit,
         config = !Array.isArray(pre) && typeof pre === 'object' ? pre : {};
 
-    ['silent', 'colors', 'template'].forEach(function each(flag) {
+    ['silent', 'template'].forEach(function each(flag) {
         let value;
 
         if (flag in config) {
@@ -150,9 +137,7 @@ Hook.prototype.log = function log(lines, exit) {
     if (typeof exit !== 'number') {
         exit = 1;
     }
-    let prefix = this.colors ?
-        '\u001b[38;5;166mpre-commit:\u001b[39;49m ' :
-        'pre-commit: ';
+    let prefix = LOG_PREFIX;
 
     lines.push(''); // Whitespace at the end of the log.
     lines.unshift(''); // Whitespace at the beginning.
