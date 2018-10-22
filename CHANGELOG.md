@@ -2,8 +2,7 @@
 - Remove support for "precommit.colors" options.
 
 ## 0.0.1
-- Use `spawn` instead of `exec` and give custom file descriptors. This way we
-  can output color and have more control over the process.
+- Just to occupy name "ihook" on npm.
 
 ## 0.0.0
 - Initial release.
