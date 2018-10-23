@@ -10,10 +10,6 @@ const assume = require('assume');
 const utils = require('../../common/utils');
 const { execSync } = require('child_process');
 const {
-    FOREACH_COMMAND_TPL,
-    FOREACH_COMMAND_KEY,
-    FOREACH_NAME,
-    FOREACH_SCRIPT,
     BATCH_NAME,
     BATCH_SCRIPT
 } = require('../../common/const')();
@@ -112,9 +108,6 @@ describe('regression - install.js', function () {
         let json = utils.readPackageJson(PACKAGE_JSON_PATH);
         assume(json).is.a('object');
         assume(json.scripts).is.a('object');
-        assume(json.scripts['pce-install-foreach']).equals(
-            'node ./node_modules/ihook/scripts/install-foreach.js'
-        );
         assume(json.scripts['pce-install-batch']).equals(
             'node ./node_modules/ihook/scripts/install-batch.js'
         );
@@ -195,82 +188,6 @@ describe('regression - index.js(common hook fail)', function () {
             PACKAGE_JSON_PATH,
             () => lastJson
         );
-    });
-});
-
-// run "pce-install-foreach".
-describe('regression - install-foreach.js', function () {
-    let ok = true;
-
-    before(function () {
-        try {
-            execSync([
-                `cd ${TESTING_DIR_NAME}`,
-                `npm run pce-install-foreach`
-            ].join(` && `));
-        } catch (e) {
-            ok = false;
-        }
-    });
-
-    it('run install-foreach.js without errors', function () {
-        assume(ok).true();
-    });
-
-    it('add config about "foreach" in package.json successly', function () {
-        let json = utils.readPackageJson(PACKAGE_JSON_PATH);
-        assume(json.scripts[FOREACH_NAME]).equals(FOREACH_SCRIPT);
-        assume(json[FOREACH_COMMAND_KEY]).equals(FOREACH_COMMAND_TPL);
-        assume(json['pre-commit']).contains(FOREACH_NAME);
-    });
-});
-
-// Git commit and trigger hook to run pce-foreach.
-describe('regression - foreach.js', function () {
-    const nameList = ['foreach_commited_0', 'foreach_commited_1'];
-
-    let ok = true;
-
-    before(function () {
-        utils.modifyPackageJson(
-            PACKAGE_JSON_PATH,
-            json => {
-                json.scripts.markHookOk = 'touch hook_run_ok_in_foreach';
-                json[FOREACH_COMMAND_KEY] = 'echo <filepath> >> foreach_run_ok';
-                return json;
-            }
-        );
-
-        try {
-            execSync([
-                `cd ${TESTING_DIR_NAME}`,
-                `echo foo >> ${nameList[0]}`,
-                `echo bar >> ${nameList[1]}`,
-                `git add ${nameList[0]} ${nameList[1]}`,
-                `git commit -m test`
-            ].join(` && `));
-        } catch (e) {
-            ok = false;
-        }
-    });
-
-    it('passed pre-commit hook and git commit successly', function () {
-        assume(ok).true();
-    });
-
-    it('foreach.js really is triggered and run successly', function () {
-        let markFilePath = `./${TESTING_DIR_NAME}/foreach_run_ok`;
-        assume(
-            fs.existsSync(markFilePath)
-        ).true();
-
-        let pathList = fs.readFileSync(markFilePath)
-            .toString()
-            .split(os.EOL)
-            .filter(line => !!line);
-        assume(pathList.length).equals(2);
-        assume(pathList[0]).includes(nameList[0]);
-        assume(pathList[1]).includes(nameList[1]);
     });
 });
 

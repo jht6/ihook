@@ -17,6 +17,7 @@ describe('pre-commit', function () {
             isTesting: true
         });
 
+
         assume(hook).is.instanceOf(Hook);
         assume(hook.parse).is.a('function');
     });

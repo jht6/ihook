@@ -52,7 +52,6 @@ if (!exists(hooks)) {
 // overriding it and losing it completely as it might contain something
 // important.
 if (exists(precommit) && !fs.lstatSync(precommit).isSymbolicLink()) {
-
     fs.writeFileSync(precommit + '.old', fs.readFileSync(precommit));
     log([
         'Detected an existing git pre-commit hook.',
@@ -111,19 +110,16 @@ if (!json.scripts) {
     json.scripts = {};
 }
 
-json.scripts['pce-install-foreach'] = 'node ./node_modules/ihook/scripts/install-foreach.js';
 json.scripts['pce-install-batch'] = 'node ./node_modules/ihook/scripts/install-batch.js';
 
 const spaceCount = 2;
 try {
     fs.writeFileSync(packageJsonPath, JSON.stringify(json, null, spaceCount) + '\n');
     log([
-        'Success: Add "pce-install-foreach" scripts in package.json at ' + packageJsonPath,
         'Success: Add "pce-install-batch" scripts in package.json at ' + packageJsonPath
     ]);
 } catch (e) {
     log([
-        'Fail: Cannot add "pce-install-foreach" scripts in package.json at ' + packageJsonPath,
         'Fail: Cannot add "pce-install-batch" scripts in package.json at ' + packageJsonPath,
         'error message is:'
     ]);
