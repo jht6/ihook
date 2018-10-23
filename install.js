@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const hook = path.join(__dirname, 'hook');
-const root = path.resolve(__dirname, '..', '..');
+const pkgDir = path.resolve(__dirname, '..', '..');
 const exists = fs.existsSync;
 const utils = require('./common/utils');
 const log = utils.log;
@@ -32,7 +32,7 @@ if (isInNestedNodeModules(__dirname)) {
 // directory which contains all git hooks and the absolute location of the
 // `pre-commit` file. The path needs to be absolute in order for the symlinking
 // to work correctly.
-let realGitRootPath = utils.getGitRootDirPath(root, true);
+let realGitRootPath = utils.getGitRootDirPath(pkgDir, true);
 let git;
 if (realGitRootPath) {
     git = path.join(realGitRootPath, '.git');
@@ -46,7 +46,7 @@ if (exists(git) && fs.lstatSync(git).isFile()) {
         gitdir = gitdirmatch.length == 2 ? gitdirmatch[1] : null;
 
     if (gitdir !== null) {
-        git = path.resolve(root, gitdir);
+        git = path.resolve(pkgDir, gitdir);
         hooks = path.resolve(git, 'hooks');
         precommit = path.resolve(hooks, 'pre-commit');
     }
