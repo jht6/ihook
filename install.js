@@ -56,8 +56,7 @@ if (exists(git) && fs.lstatSync(git).isFile()) {
 // Bail out if we don't have an `.git` directory as the hooks will not get
 // triggered. If we do have directory create a hooks folder if it doesn't exist.
 if (!git) {
-    log('Not found any .git folder for installing git hooks.');
-    return;
+    log('Not found any .git folder for installing git hooks.', 0);
 }
 
 let hooks = path.resolve(git, 'hooks'),
