@@ -1,3 +1,6 @@
+## 0.0.3
+- Remove all code about "pce-foreach".
+
 ## 0.0.2
 - Remove support for "precommit.colors" options.
 
