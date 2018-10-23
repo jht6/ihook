@@ -12,7 +12,6 @@ const utils = require('./common/utils');
 const log = utils.log;
 const isInNestedNodeModules = utils.isInNestedNodeModules;
 
-
 // Node version isn't supported, skip install
 pleaseUpgradeNode(pkg, {
     exitCode: 0,
@@ -21,12 +20,10 @@ pleaseUpgradeNode(pkg, {
     }
 });
 
-
 // Prevent installing hooks if ihook is in nested node_modules
 if (isInNestedNodeModules(__dirname)) {
     log('Trying to install in nested node_modules directory, skipping Git hooks installation.', 0);
 }
-
 
 // Gather the location of the possible hidden .git directory, the hooks
 // directory which contains all git hooks and the absolute location of the
@@ -37,21 +34,6 @@ let git;
 if (realGitRootPath) {
     git = path.join(realGitRootPath, '.git');
 }
-
-
-// Resolve git directory for submodules
-if (exists(git) && fs.lstatSync(git).isFile()) {
-    let gitinfo = fs.readFileSync(git).toString(),
-        gitdirmatch = /gitdir: (.+)/.exec(gitinfo),
-        gitdir = gitdirmatch.length == 2 ? gitdirmatch[1] : null;
-
-    if (gitdir !== null) {
-        git = path.resolve(pkgDir, gitdir);
-        hooks = path.resolve(git, 'hooks');
-        precommit = path.resolve(hooks, 'pre-commit');
-    }
-}
-
 
 // Bail out if we don't have an `.git` directory as the hooks will not get
 // triggered. If we do have directory create a hooks folder if it doesn't exist.
@@ -66,7 +48,6 @@ if (!exists(hooks)) {
     fs.mkdirSync(hooks);
 }
 
-
 // If there's an existing `pre-commit` hook we want to back it up instead of
 // overriding it and losing it completely as it might contain something
 // important.
@@ -79,13 +60,11 @@ if (exists(precommit) && !fs.lstatSync(precommit).isSymbolicLink()) {
     ]);
 }
 
-
 // We cannot create a symlink over an existing file so make sure it's gone and
 // finish the installation process.
 try {
     fs.unlinkSync(precommit);
 } catch (e) { /* do nothing */ }
-
 
 // Maybe the "node_modules" directory isn't in the git root directory
 let hookRelativeUnixPath = hook.replace(realGitRootPath, '.');
@@ -99,7 +78,6 @@ let precommitContent = '#!/usr/bin/env bash' + os.EOL +
     'RESULT=$?' + os.EOL +
     '[ $RESULT -ne 0 ] && exit 1' + os.EOL +
     'exit 0' + os.EOL;
-
 
 // It could be that we do not have rights to this folder which could cause the
 // installation of this module to completely fail. We should just output the
@@ -117,7 +95,6 @@ try {
     log('Failed to chmod 777 for hook files, error message is:');
     console.log(e.message);
 }
-
 
 // add "install-pce-foreach" in "scripts" of package.json
 let packageJsonPath = path.join(utils.getPackageJsonDirPath(), 'package.json');
