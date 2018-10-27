@@ -11,6 +11,7 @@ const exists = fs.existsSync;
 const utils = require('./common/utils');
 const log = utils.log;
 const isInNestedNodeModules = utils.isInNestedNodeModules;
+const modifyPackageJson = utils.modifyPackageJson;
 
 // Node version isn't supported, skip install
 pleaseUpgradeNode(pkg, {
@@ -95,33 +96,28 @@ try {
     console.log(e.message);
 }
 
+addScriptToPkgJson();
+
+
 // add "install-pce-foreach" in "scripts" of package.json
-let packageJsonPath = path.join(utils.getPackageJsonDirPath(), 'package.json');
-if (!exists(packageJsonPath)) {
-    log(`There is no "package.json" file in path "${packageJsonPath}"`);
-    return;
-}
+function addScriptToPkgJson() {
+    let packageJsonPath = path.join(utils.getPackageJsonDirPath(), 'package.json');
+    let ok = modifyPackageJson(packageJsonPath, json => {
+        if (!json) {
+            json = {};
+        }
+        if (!json.scripts) {
+            json.scripts = {};
+        }
 
-let json = utils.readPackageJson(packageJsonPath);
-if (!json) {
-    json = {};
-}
-if (!json.scripts) {
-    json.scripts = {};
-}
+        json.scripts['pce-install-batch'] = 'node ./node_modules/ihook/scripts/install-batch.js';
 
-json.scripts['pce-install-batch'] = 'node ./node_modules/ihook/scripts/install-batch.js';
+        return json;
+    });
 
-const spaceCount = 2;
-try {
-    fs.writeFileSync(packageJsonPath, JSON.stringify(json, null, spaceCount) + '\n');
-    log([
-        'Success: Add "pce-install-batch" scripts in package.json at ' + packageJsonPath
-    ]);
-} catch (e) {
-    log([
-        'Fail: Cannot add "pce-install-batch" scripts in package.json at ' + packageJsonPath,
-        'error message is:'
-    ]);
-    console.log(e.message);
+    if (ok) {
+        log([
+            'Success: Add "pce-install-batch" scripts in package.json at ' + packageJsonPath
+        ]);
+    }
 }
