@@ -55,7 +55,6 @@ try {
     [
         'common',
         'scripts',
-        'hook',
         'index.js',
         'install.js',
         'uninstall.js',

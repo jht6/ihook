@@ -5,7 +5,7 @@ const pkg = require('./package.json');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const hook = path.join(__dirname, 'hook');
+const jsEntryPath = path.join(__dirname, 'index.js');
 const pkgDir = path.resolve(__dirname, '..', '..');
 const exists = fs.existsSync;
 const utils = require('./common/utils');
@@ -55,7 +55,7 @@ if (exists(precommit) && !fs.lstatSync(precommit).isSymbolicLink()) {
     fs.writeFileSync(precommit + '.old', fs.readFileSync(precommit));
     log([
         'Detected an existing git pre-commit hook.',
-        'pre-commit: Old pre-commit hook backuped to "pre-commit.old".'
+        'ihook: Old pre-commit hook backuped to "pre-commit.old".'
     ]);
 }
 
@@ -66,17 +66,15 @@ try {
 } catch (e) { /* do nothing */ }
 
 // Maybe the "node_modules" directory isn't in the git root directory
-let hookRelativeUnixPath = hook.replace(realGitRootPath, '.');
+let jsEntryRelativeUnixPath = jsEntryPath.replace(realGitRootPath, '.');
 
 if (os.platform() === 'win32') {
-    hookRelativeUnixPath = hookRelativeUnixPath.replace(/[\\/]+/g, '/');
+    jsEntryRelativeUnixPath = jsEntryRelativeUnixPath.replace(/[\\/]+/g, '/');
 }
 
-let precommitContent = '#!/usr/bin/env bash' + os.EOL +
-    hookRelativeUnixPath + os.EOL +
-    'RESULT=$?' + os.EOL +
-    '[ $RESULT -ne 0 ] && exit 1' + os.EOL +
-    'exit 0' + os.EOL;
+let precommitContent = `#!/usr/bin/env bash
+node ${jsEntryRelativeUnixPath}
+`;
 
 // It could be that we do not have rights to this folder which could cause the
 // installation of this module to completely fail. We should just output the

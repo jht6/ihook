@@ -40,7 +40,7 @@ function Hook(fn, options) {
     // The dir which contains ".git" folder
     this.gitRootDir = this._OPT_.isTesting ?
         path.resolve(__dirname) :
-        path.resolve(process.argv[2]);
+        utils.getGitRootDirPath(__dirname);
 
     this.initialize();
 }
