@@ -73,7 +73,9 @@ if (os.platform() === 'win32') {
 }
 
 let precommitContent = `#!/usr/bin/env bash
-node ${jsEntryRelativeUnixPath}
+
+hookName=\`basename "$0"\`
+node ${jsEntryRelativeUnixPath} $hookName
 `;
 
 // It could be that we do not have rights to this folder which could cause the
