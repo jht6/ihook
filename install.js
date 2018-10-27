@@ -31,18 +31,18 @@ if (isInNestedNodeModules(__dirname)) {
 // `pre-commit` file. The path needs to be absolute in order for the symlinking
 // to work correctly.
 let realGitRootPath = utils.getGitRootDirPath(pkgDir, true);
-let git;
+let dotGitDirPath;
 if (realGitRootPath) {
-    git = path.join(realGitRootPath, '.git');
+    dotGitDirPath = path.join(realGitRootPath, '.git');
 }
 
 // Bail out if we don't have an `.git` directory as the hooks will not get
 // triggered. If we do have directory create a hooks folder if it doesn't exist.
-if (!git) {
+if (!dotGitDirPath) {
     log('Not found any .git folder for installing git hooks.', 0);
 }
 
-let hooks = path.resolve(git, 'hooks'),
+let hooks = path.resolve(dotGitDirPath, 'hooks'),
     precommit = path.resolve(hooks, 'pre-commit');
 
 if (!exists(hooks)) {
