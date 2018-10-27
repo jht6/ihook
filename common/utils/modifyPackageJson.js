@@ -11,7 +11,11 @@ const log = require('./log');
  */
 function modifyPackageJson(absPath, callback) {
     if (!fs.existsSync(absPath)) {
-        return false;
+        throw Error(`the param "absPath" (${absPath}) do not exist.`);
+    }
+
+    if (typeof callback !== 'function') {
+        throw Error(`the param "callback" must be a function.`);
     }
 
     let json = readPackageJson(absPath);
@@ -19,9 +23,7 @@ function modifyPackageJson(absPath, callback) {
         json = {};
     }
 
-    if (typeof callback === 'function') {
-        json = callback(json);
-    }
+    json = callback(json);
 
     if (Object.prototype.toString.call(json) !== '[object Object]') {
         throw Error('You must return an object in the callback.');
@@ -35,10 +37,14 @@ function modifyPackageJson(absPath, callback) {
         );
     } catch (e) {
         log([
-            `Fail: Add property related to "foreach" in package.json at ${absPath}`,
+            `Fail to modify the package.json at "${absPath}"`,
             `Error message is:`
         ]);
         console.log(e);
+
+        // If cannot modify package.json successfully, the follow-up code
+        //   maybe occur some error.
+        // So exit process directly.
         process.exit(1);
     }
 

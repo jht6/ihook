@@ -177,12 +177,18 @@ describe('common/utils', function () {
     describe('#modifyPackageJson', function () {
         let fn = utils.modifyPackageJson;
 
-        it('return false if the file "absPath" points to does not exist', function () {
-            let ret = fn(path.resolve(__dirname, './not_exsit.json'));
-            assume(ret).false();
+        it('throw an exception if the file "absPath" points to does not exist', function () {
+            let hasException = false;
+            try {
+                fn(path.resolve(__dirname, './not_exsit.json'));
+            } catch (e) {
+                hasException = true;
+            }
+
+            assume(hasException).true();
         });
 
-        it('write "{}" to the file if the file is empty and no callback passed', function () {
+        it('callback will receive an empty object if the file is empty', function () {
             let filename = 'tmp1.json';
             let filepath = path.join(__dirname, filename);
 
@@ -192,7 +198,7 @@ describe('common/utils', function () {
                 `touch ${filename}`
             ].join(` && `));
 
-            let ret = fn(path.resolve(__dirname, filepath));
+            let ret = fn(filepath, json => json);
             let json = utils.readPackageJson(filepath);
 
             assume(ret).true();
