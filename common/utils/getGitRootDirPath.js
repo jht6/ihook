@@ -5,7 +5,8 @@ const log = require('./log');
 
 /**
  * Search the root dir of Git project recursively from appointed dir path.
- * @param {String} startPath The dir path where start to search.
+ * @param {String} startPath the dir path where start to search.
+ * @param {Boolean} needLog true if need to print searching log, otherwise false.
  * @return {String|null} the root dir path of Git project. If not found, return null.
  */
 function getGitRootDirPath(startPath, needLog) {
