@@ -13,18 +13,7 @@ const log = utils.log;
 const isInNestedNodeModules = utils.isInNestedNodeModules;
 const modifyPackageJson = utils.modifyPackageJson;
 
-// Node version isn't supported, skip install
-pleaseUpgradeNode(pkg, {
-    exitCode: 0,
-    message: function (requiredVersion) {
-        return `ihook > ihook requires Node ${requiredVersion} , skipping Git hooks installation.`;
-    }
-});
-
-// Prevent installing hooks if ihook is in nested node_modules
-if (isInNestedNodeModules(__dirname)) {
-    log('Trying to install in nested node_modules directory, skipping Git hooks installation.', 0);
-}
+checkBeforeInstall();
 
 // Gather the location of the possible hidden .git directory, the hooks
 // directory which contains all git hooks and the absolute location of the
@@ -36,15 +25,13 @@ if (realGitRootPath) {
     dotGitDirPath = path.join(realGitRootPath, '.git');
 }
 
-// Bail out if we don't have an `.git` directory as the hooks will not get
-// triggered. If we do have directory create a hooks folder if it doesn't exist.
+// Bail out if we don't have an `.git` directory as the hooks will not get triggered.
 if (!dotGitDirPath) {
     log('Not found any .git folder for installing git hooks.', 0);
 }
 
-let hooks = path.resolve(dotGitDirPath, 'hooks'),
-    precommit = path.resolve(hooks, 'pre-commit');
-
+// Create a hooks folder if it doesn't exist.
+let hooks = path.resolve(dotGitDirPath, 'hooks');
 if (!exists(hooks)) {
     fs.mkdirSync(hooks);
 }
@@ -52,6 +39,7 @@ if (!exists(hooks)) {
 // If there's an existing `pre-commit` hook we want to back it up instead of
 // overriding it and losing it completely as it might contain something
 // important.
+let precommit = path.resolve(hooks, 'pre-commit');
 if (exists(precommit) && !fs.lstatSync(precommit).isSymbolicLink()) {
     fs.writeFileSync(precommit + '.old', fs.readFileSync(precommit));
     log([
@@ -98,6 +86,21 @@ try {
 
 addScriptToPkgJson();
 
+// Check some condition before installing hooks.
+function checkBeforeInstall() {
+    // Node version isn't supported, skip install
+    pleaseUpgradeNode(pkg, {
+        exitCode: 0,
+        message: function (requiredVersion) {
+            return `ihook > ihook requires Node ${requiredVersion} , skipping Git hooks installation.`;
+        }
+    });
+
+    // Prevent installing hooks if ihook is in nested node_modules
+    if (isInNestedNodeModules(__dirname)) {
+        log('Trying to install in nested node_modules directory, skipping Git hooks installation.', 0);
+    }
+}
 
 // add "install-pce-foreach" in "scripts" of package.json
 function addScriptToPkgJson() {
