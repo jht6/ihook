@@ -5,40 +5,11 @@ const pkg = require('./package.json');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const jsEntryPath = path.join(__dirname, 'index.js');
-const pkgDir = path.resolve(__dirname, '..', '..');
 const exists = fs.existsSync;
 const utils = require('./common/utils');
 const log = utils.log;
 const isInNestedNodeModules = utils.isInNestedNodeModules;
 const modifyPackageJson = utils.modifyPackageJson;
-
-checkBeforeInstall();
-
-// Gather the location of the possible hidden .git directory, the hooks
-// directory which contains all git hooks and the absolute location of the
-// `pre-commit` file. The path needs to be absolute in order for the symlinking
-// to work correctly.
-let realGitRootPath = utils.getGitRootDirPath(pkgDir, true);
-let dotGitDirPath;
-if (realGitRootPath) {
-    dotGitDirPath = path.join(realGitRootPath, '.git');
-}
-
-// Bail out if we don't have an `.git` directory as the hooks will not get triggered.
-if (!dotGitDirPath) {
-    log('Not found any .git folder for installing git hooks.', 0);
-}
-
-// Create a hooks folder if it doesn't exist.
-let hooksDirPath = path.resolve(dotGitDirPath, 'hooks');
-if (!exists(hooksDirPath)) {
-    fs.mkdirSync(hooksDirPath);
-}
-
-createHooks(hooksDirPath);
-
-addScriptToPkgJson();
 
 // Check some condition before installing hooks.
 function checkBeforeInstall() {
@@ -56,21 +27,21 @@ function checkBeforeInstall() {
     }
 }
 
-function createHooks(hooksDirPath) {
+function createHooks(hooksDirPath, gitRootDirPath) {
     let hookNames = ['pre-commit'];
     let hookPaths = hookNames.map(name => path.resolve(hooksDirPath, name));
     hookPaths.forEach(path => {
-        writeCodeToHook(path);
+        writeCodeToHook(path, gitRootDirPath);
     });
 }
 
 // Write shell code to hook file
-function writeCodeToHook(hookPath) {
+function writeCodeToHook(hookPath, gitRootDirPath) {
 
     backupExistedHook(hookPath);
 
     // Maybe the "node_modules" directory isn't in the git root directory
-    let jsEntryRelativeUnixPath = jsEntryPath.replace(realGitRootPath, '.');
+    let jsEntryRelativeUnixPath = getJsEntryPath().replace(gitRootDirPath, '.');
 
     if (os.platform() === 'win32') {
         jsEntryRelativeUnixPath = jsEntryRelativeUnixPath.replace(/[\\/]+/g, '/');
@@ -139,3 +110,35 @@ function addScriptToPkgJson() {
         ]);
     }
 }
+
+function getJsEntryPath() {
+    return path.join(__dirname, 'index.js');
+}
+
+function install() {
+
+    checkBeforeInstall();
+
+    const pkgDirPath = path.resolve(__dirname, '..', '..');
+    const gitRootDirPath = utils.getGitRootDirPath(pkgDirPath, true);
+    let dotGitDirPath;
+    if (gitRootDirPath) {
+        dotGitDirPath = path.join(gitRootDirPath, '.git');
+    }
+
+    // Bail out if we don't have an `.git` directory as the hooks will not get triggered.
+    if (!dotGitDirPath) {
+        log('Not found any .git folder for installing git hooks.', 0);
+    }
+
+    // Create a hooks folder if it doesn't exist.
+    let hooksDirPath = path.resolve(dotGitDirPath, 'hooks');
+    if (!exists(hooksDirPath)) {
+        fs.mkdirSync(hooksDirPath);
+    }
+
+    createHooks(hooksDirPath, gitRootDirPath);
+    addScriptToPkgJson();
+}
+
+install();
