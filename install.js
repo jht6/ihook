@@ -31,58 +31,16 @@ if (!dotGitDirPath) {
 }
 
 // Create a hooks folder if it doesn't exist.
-let hooks = path.resolve(dotGitDirPath, 'hooks');
-if (!exists(hooks)) {
-    fs.mkdirSync(hooks);
+let hooksDirPath = path.resolve(dotGitDirPath, 'hooks');
+if (!exists(hooksDirPath)) {
+    fs.mkdirSync(hooksDirPath);
 }
 
 // If there's an existing `pre-commit` hook we want to back it up instead of
 // overriding it and losing it completely as it might contain something
 // important.
-let precommit = path.resolve(hooks, 'pre-commit');
-if (exists(precommit) && !fs.lstatSync(precommit).isSymbolicLink()) {
-    fs.writeFileSync(precommit + '.old', fs.readFileSync(precommit));
-    log([
-        'Detected an existing git pre-commit hook.',
-        'ihook: Old pre-commit hook backuped to "pre-commit.old".'
-    ]);
-}
-
-// We cannot create a symlink over an existing file so make sure it's gone and
-// finish the installation process.
-try {
-    fs.unlinkSync(precommit);
-} catch (e) { /* do nothing */ }
-
-// Maybe the "node_modules" directory isn't in the git root directory
-let jsEntryRelativeUnixPath = jsEntryPath.replace(realGitRootPath, '.');
-
-if (os.platform() === 'win32') {
-    jsEntryRelativeUnixPath = jsEntryRelativeUnixPath.replace(/[\\/]+/g, '/');
-}
-
-let precommitContent = `#!/usr/bin/env bash
-
-hookName=\`basename "$0"\`
-node ${jsEntryRelativeUnixPath} $hookName
-`;
-
-// It could be that we do not have rights to this folder which could cause the
-// installation of this module to completely fail. We should just output the
-// error instead destroying the whole npm install process.
-try {
-    fs.writeFileSync(precommit, precommitContent);
-} catch (e) {
-    log('Failed to create hook files in .git/hooks folder, error message is:');
-    console.log(e.message);
-}
-
-try {
-    fs.chmodSync(precommit, '777');
-} catch (e) {
-    log('Failed to chmod 777 for hook files, error message is:');
-    console.log(e.message);
-}
+let precommit = path.resolve(hooksDirPath, 'pre-commit');
+writeCodeToHook(precommit);
 
 addScriptToPkgJson();
 
@@ -99,6 +57,56 @@ function checkBeforeInstall() {
     // Prevent installing hooks if ihook is in nested node_modules
     if (isInNestedNodeModules(__dirname)) {
         log('Trying to install in nested node_modules directory, skipping Git hooks installation.', 0);
+    }
+}
+
+// Write shell code to hook file
+function writeCodeToHook(hookPath) {
+
+    backupExistedHook(hookPath);
+
+    // Maybe the "node_modules" directory isn't in the git root directory
+    let jsEntryRelativeUnixPath = jsEntryPath.replace(realGitRootPath, '.');
+
+    if (os.platform() === 'win32') {
+        jsEntryRelativeUnixPath = jsEntryRelativeUnixPath.replace(/[\\/]+/g, '/');
+    }
+
+    let hookCode = [
+        `#!/usr/bin/env bash`,
+        ``,
+        `hookName=\`basename "$0"\``,
+        `node ${jsEntryRelativeUnixPath} $hookName`
+    ].join('\n');
+
+    // It could be that we do not have rights to this folder which could cause the
+    // installation of this module to completely fail. We should just output the
+    // error instead destroying the whole npm install process.
+    try {
+        fs.writeFileSync(hookPath, hookCode);
+    } catch (e) {
+        log('Failed to create hook files in .git/hooks folder, error message is:');
+        console.log(e.message);
+    }
+
+    try {
+        fs.chmodSync(hookPath, '777');
+    } catch (e) {
+        log('Failed to chmod 777 for hook files, error message is:');
+        console.log(e.message);
+    }
+}
+
+// If hook exists, move it to [hookName].old
+function backupExistedHook(hookPath) {
+    if (exists(hookPath) && !fs.lstatSync(hookPath).isSymbolicLink()) {
+        fs.writeFileSync(hookPath + '.old', fs.readFileSync(hookPath));
+
+        let hookName = path.basename(hookPath);
+        log([
+            `Detected an existing git "${hookName}" hook.`,
+            `Old "${hookName}" hook backuped to ""${hookName}".old".`
+        ]);
     }
 }
 
