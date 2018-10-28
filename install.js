@@ -36,11 +36,7 @@ if (!exists(hooksDirPath)) {
     fs.mkdirSync(hooksDirPath);
 }
 
-// If there's an existing `pre-commit` hook we want to back it up instead of
-// overriding it and losing it completely as it might contain something
-// important.
-let precommit = path.resolve(hooksDirPath, 'pre-commit');
-writeCodeToHook(precommit);
+createHooks(hooksDirPath);
 
 addScriptToPkgJson();
 
@@ -58,6 +54,14 @@ function checkBeforeInstall() {
     if (isInNestedNodeModules(__dirname)) {
         log('Trying to install in nested node_modules directory, skipping Git hooks installation.', 0);
     }
+}
+
+function createHooks(hooksDirPath) {
+    let hookNames = ['pre-commit'];
+    let hookPaths = hookNames.map(name => path.resolve(hooksDirPath, name));
+    hookPaths.forEach(path => {
+        writeCodeToHook(path);
+    });
 }
 
 // Write shell code to hook file
@@ -97,6 +101,9 @@ function writeCodeToHook(hookPath) {
     }
 }
 
+// If there's an existing hook we want to back it up instead of
+// overriding it and losing it completely as it might contain something
+// important.
 // If hook exists, move it to [hookName].old
 function backupExistedHook(hookPath) {
     if (exists(hookPath) && !fs.lstatSync(hookPath).isSymbolicLink()) {
