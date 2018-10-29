@@ -14,13 +14,10 @@ function getGitRootDirPath(startPath, needLog) {
 
     let dotGitPath = path.join(startPath, '.git');
 
-    if (
-        fs.existsSync(startPath) &&
-        fs.existsSync(dotGitPath) &&
-        fs.lstatSync(dotGitPath).isDirectory()
-    ) {
+    if (fs.existsSync(startPath) && fs.existsSync(dotGitPath)) {
         if (needLog) {
-            log(`Success: Found ".git" folder in ${startPath}`);
+            let pathType = fs.lstatSync(dotGitPath).isDirectory() ? 'directory' : 'file';
+            log(`Success: Found ".git" ${pathType} in ${startPath}`);
         }
         return startPath;
     } else {
@@ -29,13 +26,13 @@ function getGitRootDirPath(startPath, needLog) {
         // Stop if we are on top folder
         if (parentPath === startPath) {
             if (needLog) {
-                log(`Not found any ".git" folder, stop searching.`);
+                log(`Not found any ".git" directory or file, stop searching.`);
             }
             return null;
         } else {
             // Continue to search from parent folder.
             if (needLog) {
-                log(`Not found ".git" folder in ${startPath}, continue...`);
+                log(`Not found ".git" directory or file in ${startPath}, continue...`);
             }
             return getGitRootDirPath(parentPath, !!needLog);
         }
