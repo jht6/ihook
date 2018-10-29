@@ -1,3 +1,13 @@
+
+git submodule相关信息：
+.
+└── ihook
+    ├── .git
+    └── ihook
+        └── .git (文件, 内容为"gitdir: ../.git/modules/ihook")
+
+
+==============================
 TODO:
 
 2018.10.10
