@@ -1,12 +1,12 @@
 'use strict';
 
 const pleaseUpgradeNode = require('please-upgrade-node');
-const pkg = require('./package.json');
+const pkg = require('../../package.json');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const exists = fs.existsSync;
-const utils = require('./common/utils');
+const utils = require('../../common/utils');
 const log = utils.log;
 const isInNestedNodeModules = utils.isInNestedNodeModules;
 const modifyPackageJson = utils.modifyPackageJson;
@@ -112,7 +112,7 @@ function addScriptToPkgJson() {
 }
 
 function getJsEntryPath() {
-    return path.join(__dirname, 'index.js');
+    return path.join(__dirname, '../../index.js');
 }
 
 function install() {

@@ -7,7 +7,7 @@
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --timeout 60000",
     "example-fail": "echo \"This is the example hook, I exit with 1\" && exit 1",
     "example-pass": "echo \"This is the example hook, I exit with 0\" && exit 0",
-    "install": "node install.js",
+    "install": "node ./scripts/install/index.js",
     "lint": "eslint .",
     "test": "mocha --timeout 60000",
     "ut": "./node_modules/.bin/mocha ./test/unit/index.js --timeout 60000",

@@ -56,7 +56,6 @@ try {
         'common',
         'scripts',
         'index.js',
-        'install.js',
         'uninstall.js',
         'package.json'
     ].forEach(name => {
@@ -86,7 +85,7 @@ describe('regression - install.js', function () {
         try {
             execSync([
                 `cd ${TESTING_DIR_NAME}`,
-                `node ./node_modules/ihook/install.js`
+                `node ./node_modules/ihook/scripts/install/index.js`
             ].join(` && `));
         } catch (e) {
             ok = false;
