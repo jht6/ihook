@@ -21,6 +21,27 @@ describe('common/utils', function () {
             assume(fs.existsSync(myPath)).true();
         });
 
+        it('correctly find dir which contains this file if there is ".git" file', function () {
+            execSync([
+                `cd test`,
+                `cd unit`,
+                `echo foo > .git`
+            ].join(` && `));
+
+            let gitRootPath = utils.getGitRootDirPath(
+                path.resolve(__dirname),
+                true
+            );
+            let dotGitPath = path.join(gitRootPath, '.git');
+            assume(fs.lstatSync(dotGitPath).isFile()).true();
+
+            execSync([
+                `cd test`,
+                `cd unit`,
+                `rm .git`
+            ].join(` && `));
+        });
+
         it('return "null" if it cannot find Git project\'s root dir', function () {
             // Start searching from the parent dir of Git project root dir
             let expectNull = utils.getGitRootDirPath(
