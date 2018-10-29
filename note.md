@@ -1,10 +1,16 @@
 
-git submodule相关信息：
-.
+git submodule相关信息, 示例结构：
+/
 └── ihook
     ├── .git
-    └── ihook
-        └── .git (文件, 内容为"gitdir: ../.git/modules/ihook")
+    │   └── modules
+    │       └── pre-commit-enhanced
+    │           └── hooks
+    └── pre-commit-enhanced
+        └── .git (文件, 内容为"gitdir: ../.git/modules/pre-commit-enhanced")
+
+对于作为submodule的/ihook/pre-commit-enhanced项目来说，
+/ihook/pre-commit-enhanced目录即为git根目录，并且是钩子文件执行时的cwd
 
 
 ==============================
