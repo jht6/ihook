@@ -2,8 +2,17 @@ const getGitRootDirPath = require('./getGitRootDirPath');
 const fs = require('fs');
 const path = require('path');
 
-function getRealDotGitDirPath() {
-    const dotGitPath = getGitRootDirPath(path.join(__dirname, '../../..'));
+/**
+ * Get real .git directory.
+ * If the first found ".git" is directory, result is it's path,
+ * else is the path resolved from '.git' file.
+ * @param {String} startPath From where to start searching,
+ *      if not set, it will be the parent directory of "ihook" directory,
+ *      generally should be "node_modules" directroy.
+ */
+function getRealDotGitDirPath(startPath) {
+    startPath = startPath || path.join(__dirname, '../../..');
+    const dotGitPath = getGitRootDirPath(startPath);
     if (dotGitPath) {
         const stats = fs.lstatSync(dotGitPath);
         // If it's a .git file, resolve real path from it's content

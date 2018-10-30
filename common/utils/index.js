@@ -10,6 +10,7 @@ const addPreCommitItem = require('./addPreCommitItem');
 const transPathWinToUnix = require('./transPathWinToUnix');
 const isInNestedNodeModules = require('./isInNestedNodeModules');
 const getIhookDirPath = require('./getIhookDirPath');
+const getRealDotGitDirPath = require('./getRealDotGitDirPath');
 
 module.exports = {
     getPackageJsonDirPath,
@@ -22,7 +23,8 @@ module.exports = {
     addPreCommitItem,
     transPathWinToUnix,
     isInNestedNodeModules,
-    getIhookDirPath
+    getIhookDirPath,
+    getRealDotGitDirPath
 };
 
 /**
