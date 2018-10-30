@@ -11,27 +11,30 @@ const path = require('path');
  *      generally should be "node_modules" directroy.
  */
 function getRealDotGitDirPath(startPath) {
-    startPath = startPath || path.join(__dirname, '../../..');
-    const dotGitPath = getGitRootDirPath(startPath);
-    if (dotGitPath) {
-        const stats = fs.lstatSync(dotGitPath);
-        // If it's a .git file, resolve real path from it's content
-        if (stats.isFile()) {
-            // Sample content is like "gitdir: pathToRealDotGitDir"
-            // On Windows, pathToRealDotGitDir can contain ':',
-            // for example "gitdir: ../.git/modules/dir:name"
-            const dotGitFileContent = fs.readFileSync(dotGitPath, 'utf-8');
-            const realDotGitDirPath = dotGitFileContent
-                .split(':')
-                .slice(1)
-                .join(':')
-                .trim();
-            return path.resolve(path.dirname(dotGitPath), realDotGitDirPath);
-        }
-        // Else return path to .git directory
-        return dotGitPath;
+    startPath = startPath && path.resolve(startPath) || path.join(__dirname, '../../..');
+
+    const gitRootDirPath = getGitRootDirPath(startPath);
+    if (!gitRootDirPath) {
+        return null;
     }
-    return null;
+
+    const dotGitPath = path.join(gitRootDirPath, '.git');
+    const stats = fs.lstatSync(dotGitPath);
+    // If it's a .git file, resolve real path from it's content
+    if (stats.isFile()) {
+        // Sample content is like "gitdir: pathToRealDotGitDir"
+        // On Windows, pathToRealDotGitDir can contain ':',
+        // for example "gitdir: ../.git/modules/dir:name"
+        const dotGitFileContent = fs.readFileSync(dotGitPath, 'utf-8');
+        const realDotGitDirPath = dotGitFileContent
+            .split(':')
+            .slice(1)
+            .join(':')
+            .trim();
+        return path.resolve(gitRootDirPath, realDotGitDirPath);
+    }
+    // Else return path to .git directory
+    return dotGitPath;
 }
 
 module.exports = getRealDotGitDirPath;
