@@ -10,6 +10,7 @@ const utils = require('../../common/utils');
 const log = utils.log;
 const isInNestedNodeModules = utils.isInNestedNodeModules;
 const modifyPackageJson = utils.modifyPackageJson;
+const getRealDotGitDirPath = utils.getRealDotGitDirPath;
 
 // Check some condition before installing hooks.
 function checkBeforeInstall() {
@@ -103,17 +104,11 @@ function addScriptToPkgJson() {
 }
 
 function install() {
-
+    // Do some check. If not pass, exit process.
     checkBeforeInstall();
 
-    const pkgDirPath = path.resolve(__dirname, '..', '..');
-    const gitRootDirPath = utils.getGitRootDirPath(pkgDirPath, true);
-    let dotGitDirPath;
-    if (gitRootDirPath) {
-        dotGitDirPath = path.join(gitRootDirPath, '.git');
-    }
-
     // Bail out if we don't have an `.git` directory as the hooks will not get triggered.
+    let dotGitDirPath = getRealDotGitDirPath();
     if (!dotGitDirPath) {
         log('Not found any .git folder for installing git hooks.', 0);
     }
