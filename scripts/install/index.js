@@ -4,8 +4,8 @@ const pleaseUpgradeNode = require('please-upgrade-node');
 const pkg = require('../../package.json');
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
 const exists = fs.existsSync;
+const getHookShellCode = require('./getHookShellCode');
 const utils = require('../../common/utils');
 const log = utils.log;
 const isInNestedNodeModules = utils.isInNestedNodeModules;
@@ -27,32 +27,23 @@ function checkBeforeInstall() {
     }
 }
 
-function createHooks(hooksDirPath, gitRootDirPath) {
+function createHooks(hooksDirPath) {
     let hookNames = ['pre-commit'];
     let hookPaths = hookNames.map(name => path.resolve(hooksDirPath, name));
     hookPaths.forEach(path => {
-        writeCodeToHook(path, gitRootDirPath);
+        writeCodeToHook(path);
     });
 }
 
 // Write shell code to hook file
-function writeCodeToHook(hookPath, gitRootDirPath) {
+function writeCodeToHook(hookPath) {
 
     backupExistedHook(hookPath);
 
-    // Maybe the "node_modules" directory isn't in the git root directory
-    let jsEntryRelativeUnixPath = getJsEntryPath().replace(gitRootDirPath, '.');
-
-    if (os.platform() === 'win32') {
-        jsEntryRelativeUnixPath = jsEntryRelativeUnixPath.replace(/[\\/]+/g, '/');
+    let hookCode = getHookShellCode();
+    if (!hookCode) {
+        log('Failed to get hook code, skip installing.', 0);
     }
-
-    let hookCode = [
-        `#!/usr/bin/env bash`,
-        ``,
-        `hookName=\`basename "$0"\``,
-        `node ${jsEntryRelativeUnixPath} $hookName`
-    ].join('\n');
 
     // It could be that we do not have rights to this folder which could cause the
     // installation of this module to completely fail. We should just output the
@@ -111,10 +102,6 @@ function addScriptToPkgJson() {
     }
 }
 
-function getJsEntryPath() {
-    return path.join(__dirname, '../../index.js');
-}
-
 function install() {
 
     checkBeforeInstall();
@@ -137,7 +124,7 @@ function install() {
         fs.mkdirSync(hooksDirPath);
     }
 
-    createHooks(hooksDirPath, gitRootDirPath);
+    createHooks(hooksDirPath);
     addScriptToPkgJson();
 }
 
