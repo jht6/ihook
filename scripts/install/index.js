@@ -18,13 +18,13 @@ function checkBeforeInstall() {
     pleaseUpgradeNode(pkg, {
         exitCode: 0,
         message: function (requiredVersion) {
-            return `ihook > ihook requires Node ${requiredVersion} , skipping Git hooks installation.`;
+            return `ihook > ihook requires Node ${requiredVersion} , stop Git hooks installation.`;
         }
     });
 
     // Prevent installing hooks if ihook is in nested node_modules
     if (isInNestedNodeModules(__dirname)) {
-        log('Trying to install in nested node_modules directory, skipping Git hooks installation.', 0);
+        log('Trying to install in nested node_modules directory, stop Git hooks installation.', 0);
     }
 }
 
@@ -43,7 +43,7 @@ function writeCodeToHook(hookPath) {
 
     let hookCode = getHookShellCode();
     if (!hookCode) {
-        log('Failed to get hook code, skip installing.', 0);
+        log('Failed to get hook code, stop Git hooks installation.', 0);
     }
 
     // It could be that we do not have rights to this folder which could cause the
@@ -110,7 +110,7 @@ function install() {
     // Bail out if we don't have an `.git` directory as the hooks will not get triggered.
     let dotGitDirPath = getRealDotGitDirPath();
     if (!dotGitDirPath) {
-        log('Not found any .git folder for installing git hooks.', 0);
+        log('Not found any .git folder, stop Git hooks installation.', 0);
     }
 
     // Create a hooks folder if it doesn't exist.
