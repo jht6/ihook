@@ -6,6 +6,20 @@ const path = require('path');
  * Get real .git directory.
  * If the first found ".git" is directory, result is it's path,
  * else is the path resolved from '.git' file.
+ *
+ * An git submodule example：
+    /
+    └── ihook
+        ├── .git
+        │   └── modules
+        │       └── otherproject
+        │           └── hooks
+        └── otherproject
+            └── .git (a file, it's content is "gitdir: ../.git/modules/otherproject")
+
+    "/ihook/otherproject" is a submodule, and as a Git project, it is the root dir
+     of Git project of "otherproject" too. And it is cwd when hook is executed.
+ *
  * @param {String} startPath From where to start searching,
  *      if not set, it will be the parent directory of "ihook" directory,
  *      generally should be "node_modules" directroy.
