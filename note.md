@@ -15,13 +15,12 @@ module.exports = {
                 {
                     // 普通模式, 自定义了一些配置项
                     mode: 'common',
-                    command: 'npm run coverage',
-                    cwd: __dirname
+                    cmd: 'npm run coverage'
                 },
                 {
                     // batch模式
                     mode: 'batch',
-                    command: 'eslint <paths>',
+                    cmd: 'eslint <paths>',
                     filter: item => /\.js$/.test(item),
                     useRelativePath: true
                 }
@@ -33,12 +32,12 @@ module.exports = {
 
 每个task公共配置项有:
 mode: 'common' 或 'batch'
-command: 要执行的命令
-cwd: 执行命令时的当前工作目录 (此项是否要做支持? 待确定..)
+cmd: 要执行的命令
+cwd: 暂不支持配置项, 但代码设计时需要预留获取cwd的接口, 以便需要时进行修改.
 
 batch模式的task的配置项有:
-command中的<paths>是文件路径参数占位符
-filter: 过滤器函数, 或者'.eslintignore'之类的字符串来表示用该文件作为排除列表
+cmd中的<paths>是文件路径参数占位符
+filter: 过滤器函数, 或者['.eslintignore', '.gitignore']之类的数组来表示用该文件列表作为排除列表
 useRelativePath: <paths>参数中的路径是否用相对路径
 
 4. ihook.config.js的hooks设计为一个对象, 为后续支持其他钩子(如pre-push)预留可扩展空间
