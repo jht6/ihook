@@ -36,6 +36,7 @@
   "homepage": "https://github.com/Orange-J/ihook",
   "license": "MIT",
   "dependencies": {
+    "chai": "^4.2.0",
     "cross-spawn": "^5.0.1",
     "please-upgrade-node": "^3.1.1",
     "spawn-sync": "^1.0.15",
@@ -44,9 +45,9 @@
   "devDependencies": {
     "assume": "~1.5.0",
     "eslint": "^5.4.0",
+    "ihook": "git://github.com/Orange-J/ihook.git",
     "istanbul": "0.4.x",
-    "mocha": "~3.3.0",
-    "ihook": "git://github.com/Orange-J/ihook.git"
+    "mocha": "~3.3.0"
   },
   "engines": {
     "node": ">=6.0.0"
