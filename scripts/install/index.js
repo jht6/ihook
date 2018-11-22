@@ -80,27 +80,8 @@ function backupExistedHook(hookPath) {
     }
 }
 
-// add "install-pce-foreach" in "scripts" of package.json
-function addScriptToPkgJson() {
-    let packageJsonPath = path.join(utils.getPackageJsonDirPath(), 'package.json');
-    let ok = modifyPackageJson(packageJsonPath, json => {
-        if (!json) {
-            json = {};
-        }
-        if (!json.scripts) {
-            json.scripts = {};
-        }
-
-        json.scripts['pce-install-batch'] = 'node ./node_modules/ihook/scripts/install-batch.js';
-
-        return json;
-    });
-
-    if (ok) {
-        log([
-            'Success: Add "pce-install-batch" scripts in package.json at ' + packageJsonPath
-        ]);
-    }
+function createConfig() {
+    // TODO: 创建ihook.config.js
 }
 
 function install() {
@@ -120,7 +101,7 @@ function install() {
     }
 
     createHooks(hooksDirPath);
-    addScriptToPkgJson();
+    createConfig();
 }
 
 install();
