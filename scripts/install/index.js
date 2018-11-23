@@ -9,7 +9,6 @@ const getHookShellCode = require('./getHookShellCode');
 const utils = require('../../common/utils');
 const log = utils.log;
 const isInNestedNodeModules = utils.isInNestedNodeModules;
-const modifyPackageJson = utils.modifyPackageJson;
 const getRealDotGitDirPath = utils.getRealDotGitDirPath;
 
 // Check some condition before installing hooks.
