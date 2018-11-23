@@ -190,91 +190,91 @@ describe('regression - index.js(common hook fail)', function () {
 });
 
 // Install batch
-describe('regression - install-batch.js', function () {
-    let ok = true;
+// describe('regression - install-batch.js', function () {
+//     let ok = true;
 
-    before(function () {
-        try {
-            execSync([
-                `cd ${TESTING_DIR_NAME}`,
-                `npm run pce-install-batch`
-            ].join(` && `));
-        } catch (e) {
-            ok = false;
-        }
-    });
+//     before(function () {
+//         try {
+//             execSync([
+//                 `cd ${TESTING_DIR_NAME}`,
+//                 `npm run pce-install-batch`
+//             ].join(` && `));
+//         } catch (e) {
+//             ok = false;
+//         }
+//     });
 
-    it('run install-batch.js without errors', function () {
-        assume(ok).true();
-    });
+//     it('run install-batch.js without errors', function () {
+//         assume(ok).true();
+//     });
 
-    it('add config about "batch" in package.json successly', function () {
-        let json = utils.readPackageJson(PACKAGE_JSON_PATH);
-        assume(json.scripts[BATCH_NAME]).equals(BATCH_SCRIPT);
-        assume(json['pre-commit']).contains(BATCH_NAME);
-    });
+//     it('add config about "batch" in package.json successly', function () {
+//         let json = utils.readPackageJson(PACKAGE_JSON_PATH);
+//         assume(json.scripts[BATCH_NAME]).equals(BATCH_SCRIPT);
+//         assume(json['pre-commit']).contains(BATCH_NAME);
+//     });
 
-    it('copy "batch-callback.js" to "package.json"\'s dir and rename it to "pce-batch-callback.js"', function () {
-        assume(
-            fs.existsSync(`./${TESTING_DIR_NAME}/pce-batch-callback.js`)
-        ).true();
-    });
-});
+//     it('copy "batch-callback.js" to "package.json"\'s dir and rename it to "pce-batch-callback.js"', function () {
+//         assume(
+//             fs.existsSync(`./${TESTING_DIR_NAME}/pce-batch-callback.js`)
+//         ).true();
+//     });
+// });
 
 // Git commit and trigger hook to run pce-batch.
-describe('regression - pce-batch.js', function () {
-    let ok = true;
+// describe('regression - pce-batch.js', function () {
+//     let ok = true;
 
-    before(function () {
-        // only remain "pce-batch" in "pre-commit" array
-        utils.modifyPackageJson(
-            PACKAGE_JSON_PATH,
-            json => {
-                json['pre-commit'] = [BATCH_NAME];
-                return json;
-            }
-        );
+//     before(function () {
+//         // only remain "pce-batch" in "pre-commit" array
+//         utils.modifyPackageJson(
+//             PACKAGE_JSON_PATH,
+//             json => {
+//                 json['pre-commit'] = [BATCH_NAME];
+//                 return json;
+//             }
+//         );
 
-        // git commit all files and do not trigger pre-commit hook
-        execSync([
-            `cd ${TESTING_DIR_NAME}`,
-            `git add .`,
-            `git commit -m test -n`
-        ].join(` && `));
+//         // git commit all files and do not trigger pre-commit hook
+//         execSync([
+//             `cd ${TESTING_DIR_NAME}`,
+//             `git add .`,
+//             `git commit -m test -n`
+//         ].join(` && `));
 
-        // git commit, trigger pre-commit hook and run batch.js
-        try {
-            execSync([
-                `cd ${TESTING_DIR_NAME}`,
-                `touch batch_1.js batch_2.js batch_3.js`,
-                `git add .`,
-                `git commit -m test-batch`
-            ].join(` && `));
-        } catch (e) {
-            ok = false;
-        }
-    });
+//         // git commit, trigger pre-commit hook and run batch.js
+//         try {
+//             execSync([
+//                 `cd ${TESTING_DIR_NAME}`,
+//                 `touch batch_1.js batch_2.js batch_3.js`,
+//                 `git add .`,
+//                 `git commit -m test-batch`
+//             ].join(` && `));
+//         } catch (e) {
+//             ok = false;
+//         }
+//     });
 
-    it('passed pre-commit hook and git commit successly', function () {
-        assume(ok).true();
-    });
+//     it('passed pre-commit hook and git commit successly', function () {
+//         assume(ok).true();
+//     });
 
-    it('batch.js really is triggered and run successly', function () {
-        let markFilePath = `./${TESTING_DIR_NAME}/batch_run_ok`;
-        assume(
-            fs.existsSync(markFilePath)
-        ).true();
+//     it('batch.js really is triggered and run successly', function () {
+//         let markFilePath = `./${TESTING_DIR_NAME}/batch_run_ok`;
+//         assume(
+//             fs.existsSync(markFilePath)
+//         ).true();
 
-        let pathList = fs.readFileSync(markFilePath)
-            .toString()
-            .split(' ')
-            .filter(item => !!item && item !== os.EOL);
-        assume(pathList.length).equals(3);
-        assume(pathList).includes('./batch_1.js');
-        assume(pathList).includes('./batch_2.js');
-        assume(pathList).includes('./batch_3.js');
-    });
-});
+//         let pathList = fs.readFileSync(markFilePath)
+//             .toString()
+//             .split(' ')
+//             .filter(item => !!item && item !== os.EOL);
+//         assume(pathList.length).equals(3);
+//         assume(pathList).includes('./batch_1.js');
+//         assume(pathList).includes('./batch_2.js');
+//         assume(pathList).includes('./batch_3.js');
+//     });
+// });
 
 // TODO: batch.js执行失败的用例
 
