@@ -6,7 +6,7 @@ const path = require('path');
 const os = require('os');
 const { getGitRootDirPath } = require('../../common/utils/index');
 
-const getJsEntryPath = () => path.join(__dirname, '../../index.js');
+const getJsEntryPath = () => path.join(__dirname, '../run/index.js');
 const render = ({ jsEntryRelativeUnixPath }) => `#!/bin/sh
 hookName=\`basename "$0"\`
 node ${jsEntryRelativeUnixPath} $hookName
