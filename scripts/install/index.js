@@ -3,6 +3,7 @@
 const pleaseUpgradeNode = require('please-upgrade-node');
 const pkg = require('../../package.json');
 const fs = require('fs');
+const fsExtra = require('fs-extra');
 const path = require('path');
 const exists = fs.existsSync;
 const getHookShellCode = require('./getHookShellCode');
@@ -10,6 +11,8 @@ const utils = require('../../common/utils');
 const log = utils.log;
 const isInNestedNodeModules = utils.isInNestedNodeModules;
 const getRealDotGitDirPath = utils.getRealDotGitDirPath;
+const getPackageJsonDirPath = utils.getPackageJsonDirPath;
+const { CONFIG_FILE_NAME } = require('../../common/const')();
 
 // Check some condition before installing hooks.
 function checkBeforeInstall() {
@@ -79,8 +82,11 @@ function backupExistedHook(hookPath) {
     }
 }
 
-function createConfig() {
-    // TODO: 创建ihook.config.js
+function copyConfigFileToPkgDir() {
+    fsExtra.copySync(
+        path.join(__dirname, CONFIG_FILE_NAME),
+        path.join(getPackageJsonDirPath(), CONFIG_FILE_NAME)
+    );
 }
 
 function install() {
@@ -100,7 +106,7 @@ function install() {
     }
 
     createHooks(hooksDirPath);
-    createConfig();
+    copyConfigFileToPkgDir();
 }
 
 install();

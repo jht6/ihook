@@ -11,7 +11,8 @@ const utils = require('../../common/utils');
 const { execSync } = require('child_process');
 const {
     BATCH_NAME,
-    BATCH_SCRIPT
+    BATCH_SCRIPT,
+    CONFIG_FILE_NAME
 } = require('../../common/const')();
 
 const PCE_ROOT_DIR = process.cwd(); // This module's git reposition root dir path.
@@ -99,6 +100,12 @@ describe('regression - install.js', function () {
     it('install "pre-commit" hook file in .git/hooks', function () {
         assume(
             fs.existsSync(`./${TESTING_DIR_NAME}/.git/hooks/pre-commit`)
+        ).true();
+    });
+
+    it(`copy "${CONFIG_FILE_NAME}" to "package.json"\'s dir`, function () {
+        assume(
+            fs.existsSync(`./${TESTING_DIR_NAME}/${CONFIG_FILE_NAME}`)
         ).true();
     });
 });
