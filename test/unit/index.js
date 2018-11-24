@@ -3,4 +3,3 @@
  */
 
 require('./utils.test.js');
-require('./utils/index');
