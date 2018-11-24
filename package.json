@@ -45,7 +45,8 @@
   "devDependencies": {
     "eslint": "^5.4.0",
     "ihook": "git://github.com/Orange-J/ihook.git",
-    "istanbul": "0.4.x"
+    "istanbul": "0.4.x",
+    "jest": "^23.6.0"
   },
   "engines": {
     "node": ">=6.0.0"
