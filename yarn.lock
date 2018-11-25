@@ -1351,15 +1351,6 @@ ignore@^4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
 
-"ihook@git://github.com/Orange-J/ihook.git":
-  version "0.0.3"
-  resolved "git://github.com/Orange-J/ihook.git#32b38220c96f520b9016011ac1bcdd0aa28c8833"
-  dependencies:
-    cross-spawn "^5.0.1"
-    please-upgrade-node "^3.1.1"
-    spawn-sync "^1.0.15"
-    which "1.2.x"
-
 import-local@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/import-local/-/import-local-1.0.0.tgz#5e4ffdc03f4fe6c009c6729beb29631c2f8227bc"
