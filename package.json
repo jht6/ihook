@@ -53,5 +53,8 @@
   "pre-commit": [
     "lint",
     "test"
-  ]
+  ],
+  "jest": {
+    "globalSetup": "<rootDir>/test/__jest__/setup.js"
+  }
 }
