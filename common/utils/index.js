@@ -1,5 +1,4 @@
-const path = require('path');
-
+const getPackageJsonDirPath = require('./getPackageJsonDirPath');
 const getGitRootDirPath = require('./getGitRootDirPath');
 const log = require('./log');
 const getGitStatus = require('./getGitStatus');
@@ -26,16 +25,3 @@ module.exports = {
     getIhookDirPath,
     getRealDotGitDirPath
 };
-
-/**
- * Get absolute path of directory which contains the 'package.json'.
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- *                     IMPORTANT
- *  This function depends on this file's position.
- *  If this file is moved, notice to check the code.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-function getPackageJsonDirPath() {
-    return path.resolve(__dirname, '..', '..', '..', '..');
-}
