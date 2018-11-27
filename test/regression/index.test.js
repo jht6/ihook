@@ -275,7 +275,7 @@ describe('regression - scripts/run/index.js(common hook)', function () {
 
 // Just to remove temporary testing dir
 // This code should be always the bottom
-if (process.argv.indexOf('--not-delete-sandbox') === -1) {
+if (typeof __SAVE_SANDBOX__ === 'undefined') {
     describe('regression - finish testing', function () {
         test(`remove ${TESTING_DIR_NAME} after testing ends`, function () {
             execSync(`rm -rf ${TESTING_DIR_NAME}`);

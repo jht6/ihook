@@ -12,7 +12,7 @@
     "test": "node_modules/.bin/jest --silent",
     "ut": "node_modules/.bin/jest --silent --testPathPattern __tests__/*",
     "rt": "node_modules/.bin/jest --silent --testPathPattern regression/*",
-    "rt-s": "node_modules/.bin/jest --testPathPattern regression/*",
+    "rt-s": "node_modules/.bin/jest --testPathPattern regression/* --config test/__jest__/config.rts.js",
     "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- test.js",
     "uninstall": "node uninstall.js",
     "pce-install-foreach": "node ./node_modules/ihook/scripts/install-foreach.js",
