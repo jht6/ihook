@@ -5,7 +5,6 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const assume = require('assume');
 
 const utils = require('../../common/utils');
 const { execSync } = require('child_process');
@@ -26,7 +25,7 @@ if (fs.existsSync(TESTING_DIR_PATH)) {
         execSync(`rm -rf ./${TESTING_DIR_NAME}`);
     } catch (e) {
         utils.log(`Can't remove the existing "${TESTING_DIR_NAME}" directory, skip testing.`);
-        return;
+        process.exit(0);
     }
 }
 
@@ -48,7 +47,7 @@ try {
     ].join(` && `));
 } catch (e) {
     utils.log(`Can't create file construct in "sandbox" directory, skip testing.`);
-    return;
+    process.exit(0);
 }
 
 // Copy code file.
@@ -63,7 +62,7 @@ try {
     });
 } catch (e) {
     utils.log(`Error occured when copy code file to sandbox, skip testing.`);
-    return;
+    process.exit(0);
 }
 
 // Install dependence for copied code.
@@ -74,14 +73,14 @@ try {
     ].join(` && `));
 } catch (e) {
     utils.log(`Error occured when install dependence for copied code in sandbox, skip testing.`);
-    return;
+    process.exit(0);
 }
 
 // Run install.js.
 describe('regression - install.js', function () {
     let ok = true;
 
-    before(function () {
+    beforeAll(function () {
         try {
             execSync([
                 `cd ${TESTING_DIR_NAME}`,
@@ -93,20 +92,20 @@ describe('regression - install.js', function () {
     });
 
     it('run install.js without errors', function () {
-        assume(ok).true();
+        expect(ok).toBe(true);
     });
 
     // TODO: other hooks except "pre-commit"
     it('install "pre-commit" hook file in .git/hooks', function () {
-        assume(
+        expect(
             fs.existsSync(`./${TESTING_DIR_NAME}/.git/hooks/pre-commit`)
-        ).true();
+        ).toBe(true);
     });
 
     it(`copy "${CONFIG_FILE_NAME}" to "package.json"\'s dir`, function () {
-        assume(
+        expect(
             fs.existsSync(`./${TESTING_DIR_NAME}/${CONFIG_FILE_NAME}`)
-        ).true();
+        ).toBe(true);
     });
 });
 
@@ -115,7 +114,7 @@ describe('regression - scripts/run/index.js(common hook)', function () {
     let ok = true;
     let commited = 'commited';
 
-    before(function () {
+    beforeAll(function () {
         try {
             execSync([
                 `cd ${TESTING_DIR_NAME}`,
@@ -129,11 +128,11 @@ describe('regression - scripts/run/index.js(common hook)', function () {
     });
 
     it('passed pre-commit hook and git commit successly', function () {
-        assume(ok).true();
+        expect(ok).toBe(true);
     });
 
     // it('hook really is triggered and run successly', function () {
-    //     assume(
+    //     expect(
     //         fs.existsSync(`./${TESTING_DIR_NAME}/hook_run_ok`)
     //     ).true();
     // });
@@ -144,7 +143,7 @@ describe('regression - scripts/run/index.js(common hook)', function () {
 //     let lastJson;
 //     let ok = true;
 
-//     before(function () {
+//     beforeAll(function () {
 //         utils.modifyPackageJson(
 //             PACKAGE_JSON_PATH,
 //             json => {
@@ -168,7 +167,7 @@ describe('regression - scripts/run/index.js(common hook)', function () {
 //     });
 
 //     it('committing will fail if the hook exit with a non-zero code', function () {
-//         assume(ok).false();
+//         expect(ok).false();
 //     });
 
 //     after(function () {
@@ -189,7 +188,7 @@ describe('regression - scripts/run/index.js(common hook)', function () {
 // describe('regression - install-batch.js', function () {
 //     let ok = true;
 
-//     before(function () {
+//     beforeAll(function () {
 //         try {
 //             execSync([
 //                 `cd ${TESTING_DIR_NAME}`,
@@ -201,17 +200,17 @@ describe('regression - scripts/run/index.js(common hook)', function () {
 //     });
 
 //     it('run install-batch.js without errors', function () {
-//         assume(ok).true();
+//         expect(ok).true();
 //     });
 
 //     it('add config about "batch" in package.json successly', function () {
 //         let json = utils.readPackageJson(PACKAGE_JSON_PATH);
-//         assume(json.scripts[BATCH_NAME]).equals(BATCH_SCRIPT);
-//         assume(json['pre-commit']).contains(BATCH_NAME);
+//         expect(json.scripts[BATCH_NAME]).equals(BATCH_SCRIPT);
+//         expect(json['pre-commit']).contains(BATCH_NAME);
 //     });
 
 //     it('copy "batch-callback.js" to "package.json"\'s dir and rename it to "pce-batch-callback.js"', function () {
-//         assume(
+//         expect(
 //             fs.existsSync(`./${TESTING_DIR_NAME}/pce-batch-callback.js`)
 //         ).true();
 //     });
@@ -221,7 +220,7 @@ describe('regression - scripts/run/index.js(common hook)', function () {
 // describe('regression - pce-batch.js', function () {
 //     let ok = true;
 
-//     before(function () {
+//     beforeAll(function () {
 //         // only remain "pce-batch" in "pre-commit" array
 //         utils.modifyPackageJson(
 //             PACKAGE_JSON_PATH,
@@ -252,12 +251,12 @@ describe('regression - scripts/run/index.js(common hook)', function () {
 //     });
 
 //     it('passed pre-commit hook and git commit successly', function () {
-//         assume(ok).true();
+//         expect(ok).true();
 //     });
 
 //     it('batch.js really is triggered and run successly', function () {
 //         let markFilePath = `./${TESTING_DIR_NAME}/batch_run_ok`;
-//         assume(
+//         expect(
 //             fs.existsSync(markFilePath)
 //         ).true();
 
@@ -265,10 +264,10 @@ describe('regression - scripts/run/index.js(common hook)', function () {
 //             .toString()
 //             .split(' ')
 //             .filter(item => !!item && item !== os.EOL);
-//         assume(pathList.length).equals(3);
-//         assume(pathList).includes('./batch_1.js');
-//         assume(pathList).includes('./batch_2.js');
-//         assume(pathList).includes('./batch_3.js');
+//         expect(pathList.length).equals(3);
+//         expect(pathList).includes('./batch_1.js');
+//         expect(pathList).includes('./batch_2.js');
+//         expect(pathList).includes('./batch_3.js');
 //     });
 // });
 
@@ -278,7 +277,7 @@ describe('regression - scripts/run/index.js(common hook)', function () {
 // This code should be always the bottom
 if (process.argv.indexOf('--not-delete-sandbox') === -1) {
     describe('regression - finish testing', function () {
-        it(`remove ${TESTING_DIR_NAME} after testing ends`, function () {
+        test(`remove ${TESTING_DIR_NAME} after testing ends`, function () {
             execSync(`rm -rf ${TESTING_DIR_NAME}`);
         });
     });
