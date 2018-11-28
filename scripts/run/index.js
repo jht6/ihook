@@ -1,22 +1,10 @@
 'use strict';
 
-const path = require('path');
-const {
-    getPackageJsonDirPath,
-    readPackageJson
-} = require('../../common/utils');
+const getResolvedTasks = require('./getResolvedTasks');
 
-function getPkgJson() {
-    let ret;
-    try {
-        ret = readPackageJson(
-            path.join(getPackageJsonDirPath(), 'package.json')
-        );
-    } catch (e) {
-        ret = null;
-    }
-
-    return ret;
+function run() {
+    let tasks = getResolvedTasks(process.argv);
+    console.log(tasks);
 }
 
-console.log(getPkgJson());
+run();

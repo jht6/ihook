@@ -10,6 +10,7 @@ const transPathWinToUnix = require('./transPathWinToUnix');
 const isInNestedNodeModules = require('./isInNestedNodeModules');
 const getIhookDirPath = require('./getIhookDirPath');
 const getRealDotGitDirPath = require('./getRealDotGitDirPath');
+const getConfig = require('./getConfig');
 
 module.exports = {
     getPackageJsonDirPath,
@@ -23,5 +24,6 @@ module.exports = {
     transPathWinToUnix,
     isInNestedNodeModules,
     getIhookDirPath,
-    getRealDotGitDirPath
+    getRealDotGitDirPath,
+    getConfig
 };
