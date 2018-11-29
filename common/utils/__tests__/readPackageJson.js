@@ -39,7 +39,7 @@ test('return null if the file\'s content cannot be parsed', () => {
 
     let ret = readPackageJson(filepath);
     expect(ret).toBe(null);
-    
+
     execSync(`rm -f ${filename}`);
 });
 
@@ -49,6 +49,6 @@ test('read json from a file successly', function () {
     let ret = readPackageJson(filepath);
     expect(typeof ret).toBe('object');
     expect(ret.name).toBe('oj');
-    
+
     execSync(`rm -f ${filename}`);
 });
