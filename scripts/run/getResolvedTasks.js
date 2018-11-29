@@ -29,17 +29,17 @@ function getResolvedTasks([, , hookName]) {
     let config = getConfig();
     let hooks = config.hooks;
     if (!hooks) {
-        return NO_HOOKS;
+        return errorCode.NO_HOOKS;
     }
 
     let hookConfig = hooks[hookName];
     if (!hookConfig) {
-        return NO_HOOK_CONFIG;
+        return errorCode.NO_HOOK_CONFIG;
     }
 
     let tasks = hookConfig.tasks;
     if (!tasks || !tasks.length) {
-        return NO_TASKS;
+        return errorCode.NO_TASKS;
     }
 
     return _resolveTasks(tasks);
