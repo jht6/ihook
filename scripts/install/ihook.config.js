@@ -13,7 +13,7 @@ module.exports = {
                 },
                 {
                     type: 'batch',
-                    command: 'eslint <paths>'
+                    command: 'echo <paths>'
                 }
             ]
         }

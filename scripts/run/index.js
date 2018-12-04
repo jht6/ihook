@@ -32,7 +32,7 @@ function run() {
         ].includes(hookName)
             ? '(add "--no-verify" or "-n" to bypass Git hook)'
             : '(cannot be bypassed with --no-verify due to Git specs)';
-        log(`${hookName} hook failed ${canBypassHooks}`, e.code);
+        log(`${hookName} hook failed ${canBypassHooks}`, e.code || 1);
     }
 }
 
