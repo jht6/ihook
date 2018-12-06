@@ -68,12 +68,12 @@ module.exports = (task) => {
 
     let exitCode = 0;
 
-    // TODO: 执行batch命令，确定exitCode
     try {
-        execa.shellSync(command, {
+        let obj = execa.shellSync(command, {
             cwd,
             stdio: 'inherit'
         });
+        exitCode = obj.status;
     } catch (e) {
         exitCode = e.code || 1;
     }

@@ -11,11 +11,13 @@ module.exports = (task) => {
     const cwd = path.resolve(scriptPath.split('node_modules')[0]);
 
     let exitCode = 0;
+
     try {
-        execa.shellSync(task.command, {
+        let obj = execa.shellSync(task.command, {
             cwd,
             stdio: 'inherit'
         });
+        exitCode = obj.status;
     } catch (e) {
         exitCode = e.code || 1;
     }
