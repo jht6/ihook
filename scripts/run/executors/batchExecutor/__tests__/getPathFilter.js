@@ -95,7 +95,7 @@ describe('#createFilterByConfig', () => {
     const ignore2 = 'ignore_2';
     const ignoreRule1 = [
         'ignore_1_a/',
-        'ignore_1_b/',
+        'ignore_1_b/*',
         '!ignore_1_b/notignore/'
     ].join('\n') + '\n';
     const ignoreRule2 = 'ignore_2_a/*.ts\n';
@@ -120,41 +120,40 @@ describe('#createFilterByConfig', () => {
     });
 
     const cases = [
-        [ './ignore_1_a/a.js', false ],
-        [ './ignore_1_a/a.css', false ],
-        [ './ignore_1_aa/aa.js', true ],
-        [ './ignore_1_aa/aa.ts', true ],
-        [ './ignore_1_aa/aa.jsx', true ],
-        [ './ignore_1_aa/aa.css', false ],
-        [ './ignore_1_b/b.js', false ],
-        [ './ignore_1_b/notignore/b.js', true ],
-        [ './ignore_1_b/notignore/b.jsx', true ],
-        [ './ignore_1_b/notignore/b.css', false ],
-        [ './ignore_2_a/a.js', true ],
-        [ './ignore_2_a/a.jsx', true ],
-        [ './ignore_2_a/a.ts', false ]
+        [ 'ignore_1_a/a.js', false ],
+        [ 'ignore_1_a/a.css', false ],
+        [ 'ignore_1_aa/aa.js', true ],
+        [ 'ignore_1_aa/aa.ts', true ],
+        [ 'ignore_1_aa/aa.jsx', true ],
+        [ 'ignore_1_aa/aa.css', false ],
+        [ 'ignore_1_b/b.js', false ],
+        [ 'ignore_1_b/notignore/b.js', true ],
+        [ 'ignore_1_b/notignore/b.jsx', true ],
+        [ 'ignore_1_b/notignore/b.css', false ],
+        [ 'ignore_2_a/a.js', true ],
+        [ 'ignore_2_a/a.jsx', true ],
+        [ 'ignore_2_a/a.ts', false ]
     ];
 
     test('createFilterByConfig', () => {
-
-        // TODO: 从此处继续工作
         const filter = createFilterByConfig({
-            extensions: ['.js', '.jsx', 'ts'],
+            extensions: ['.js', '.jsx', '.ts'],
             ignoreRuleFiles: [ignore1, ignore2]
         }, __dirname);
 
         const filteredList = cases.map(item => item[0]).filter(filter);
+
         cases.forEach(item => {
             expect(filteredList.includes(item[0])).toBe(item[1]);
         });
     });
 
     // remove files for testing
-    // afterAll(() => {
-    //     execSync([
-    //         `cd ${__dirname}`,
-    //         `rm ${ignore1}`,
-    //         `rm ${ignore2}`
-    //     ].join(` && `));
-    // });
+    afterAll(() => {
+        execSync([
+            `cd ${__dirname}`,
+            `rm ${ignore1}`,
+            `rm ${ignore2}`
+        ].join(` && `));
+    });
 });
