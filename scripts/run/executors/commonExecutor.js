@@ -8,16 +8,18 @@ const execa = require('execa');
  */
 module.exports = (task) => {
     const scriptPath = process.argv[1];
-    const cwd = path.resolve(scriptPath.split('node_modules')[0]);
+    const cwd = scriptPath.indexOf('node_modules') > -1 ?
+        path.resolve(scriptPath.split('node_modules')[0]) :
+        __dirname; // for testing
 
     let exitCode = 0;
 
     try {
-        let obj = execa.shellSync(task.command, {
+        execa.shellSync(task.command, {
             cwd,
             stdio: 'inherit'
         });
-        exitCode = obj.status;
+        exitCode = 0;
     } catch (e) {
         exitCode = e.code || 1;
     }

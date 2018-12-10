@@ -24,7 +24,9 @@ const getPathFilter = require('./getPathFilter');
  */
 module.exports = (task) => {
     const scriptPath = process.argv[1];
-    const cwd = path.resolve(scriptPath.split('node_modules')[0]);
+    const cwd = scriptPath.indexOf('node_modules') > -1 ?
+        path.resolve(scriptPath.split('node_modules')[0]) :
+        __dirname; // for testing
 
     let command = task.command;
 
@@ -47,7 +49,7 @@ module.exports = (task) => {
     const PKG_JSON_DIR_PATH_UNIX = transPathWinToUnix(getPackageJsonDirPath());
     if (task.useRelativePath === true) {
         pathList = pathList.map(
-            item => item.replace(PKG_JSON_DIR_PATH_UNIX, '.')
+            item => path.relative(PKG_JSON_DIR_PATH_UNIX, item)
         );
     }
 
@@ -69,11 +71,11 @@ module.exports = (task) => {
     let exitCode = 0;
 
     try {
-        let obj = execa.shellSync(command, {
+        execa.shellSync(command, {
             cwd,
             stdio: 'inherit'
         });
-        exitCode = obj.status;
+        exitCode = 0;
     } catch (e) {
         exitCode = e.code || 1;
     }
