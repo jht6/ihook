@@ -54,7 +54,7 @@ module.exports = (task) => {
     if (task.filter) {
         const filter = getPathFilter(task.filter);
         if (!filter) {
-            log(`Cannot resolve the filter config of batch task, please check it.`, 1);
+            log(`Error occured when resolving the filter config of batch task, please check it.`, 1);
         }
         pathList = pathList.filter(filter);
     }
