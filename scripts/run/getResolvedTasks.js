@@ -16,12 +16,19 @@ const errorMsg = {
     [errorCode.NO_TASKS]: `Your config hasn't "tasks" property in "${process.argv[2]}", please check "${CONFIG_FILE_NAME}`
 };
 
+// take the dir which contains "node_modules" as cwd
+const cwd = path.resolve(process.argv[1].split('node_modules')[0]);
+
 function resolveTasks(tasks) {
     return tasks.map(task => {
-        return typeof task !== 'string' ? task : {
+        let ret = typeof task !== 'string' ? task : {
             type: 'common',
             command: task
         };
+
+        ret.cwd = cwd;
+
+        return ret;
     });
 }
 
