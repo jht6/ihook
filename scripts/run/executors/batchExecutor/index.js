@@ -23,11 +23,6 @@ const getPathFilter = require('./getPathFilter');
  * @return {Number} exit code, if no error occurs, it's 0, else it's non-zero.
  */
 module.exports = (task) => {
-    const scriptPath = process.argv[1];
-    const cwd = scriptPath.indexOf('node_modules') > -1 ?
-        path.resolve(scriptPath.split('node_modules')[0]) :
-        __dirname; // for testing
-
     let command = task.command;
 
     // If batch task command doesn't contain "<paths>", exit process with error.
@@ -72,7 +67,7 @@ module.exports = (task) => {
 
     try {
         execa.shellSync(command, {
-            cwd,
+            cwd: task.cwd,
             stdio: 'inherit'
         });
         exitCode = 0;
