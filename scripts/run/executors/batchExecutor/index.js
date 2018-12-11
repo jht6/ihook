@@ -11,6 +11,9 @@ const {
 const { BATCH_CMD_PARAM_TOKEN } = require('../../../../common/const')();
 const getPathFilter = require('./getPathFilter');
 
+const pkgJsonDir = getPackageJsonDirPath();
+
+
 /**
  * Batch task executor
  * @param {Object} task shaped like
@@ -41,7 +44,7 @@ module.exports = (task) => {
     pathList = pathList.map(transPathWinToUnix);
 
     // If "useRelativePath" is true, transform absolute paths to relative paths(relative to packageJsonDir).
-    const PKG_JSON_DIR_PATH_UNIX = transPathWinToUnix(getPackageJsonDirPath());
+    const PKG_JSON_DIR_PATH_UNIX = transPathWinToUnix(pkgJsonDir);
     if (task.useRelativePath === true) {
         pathList = pathList.map(
             item => path.relative(PKG_JSON_DIR_PATH_UNIX, item)
@@ -49,7 +52,7 @@ module.exports = (task) => {
     }
 
     if (task.filter) {
-        const filter = getPathFilter(task.filter);
+        const filter = getPathFilter(task.filter, pkgJsonDir);
         if (!filter) {
             log(`Error occured when resolving the filter config of batch task, please check it.`, 1);
         }

@@ -3,7 +3,6 @@ const path = require('path');
 const ignore = require('ignore');
 
 const {
-    getPackageJsonDirPath,
     log
 } = require('../../../../common/utils');
 
@@ -100,15 +99,12 @@ function createFilterByConfig(config, pkgJsonDir) {
  *      ignoreRuleFiles: ['.eslintignore']
  *  }
  */
-module.exports = filterConfig => {
+module.exports = (filterConfig, pkgJsonDir) => {
     let ret;
     if (typeof filterConfig === 'function') {
         ret = filterConfig;
     } else if (typeof filterConfig === 'object' && filterConfig !== null) {
-        ret = createFilterByConfig(
-            filterConfig,
-            getPackageJsonDirPath()
-        );
+        ret = createFilterByConfig(filterConfig, pkgJsonDir);
     } else {
         ret = null;
     }
