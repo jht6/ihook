@@ -1,4 +1,4 @@
-const commonExecutor = require('..').common;
+const commonExecutor = require('..');
 
 test('return 0 if the task command executed successfully', () => {
     let result = commonExecutor({
