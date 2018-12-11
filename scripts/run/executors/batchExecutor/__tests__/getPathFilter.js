@@ -1,12 +1,14 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+
+const getPathFilter = require('../getPathFilter');
 const {
     createExtensionReg,
     checkExtensions,
     checkIgnoreRuleFilesExist,
     createFilterByConfig
-} = require('../getPathFilter').__tests__;
+} = getPathFilter.__tests__;
 
 describe('#createExtensionReg', () => {
     test('the regExp created from [".js"]', () => {
@@ -154,6 +156,85 @@ describe('#createFilterByConfig', () => {
             `cd ${__dirname}`,
             `rm ${ignore1}`,
             `rm ${ignore2}`
+        ].join(` && `));
+    });
+});
+
+describe('#getPathFilter', () => {
+    const eslintIgnore = '.eslintignore';
+    const gitIgnore = '.gitignore';
+    const eslintIngoreRule = 'ignore1\nignore2\n';
+    const gitIgnoreRule = 'ignore3\n';
+
+    // create ignore rule files for testing
+    beforeAll(() => {
+        execSync([
+            `cd ${__dirname}`,
+            `touch ${eslintIgnore}`,
+            `touch ${gitIgnore}`
+        ].join(` && `));
+
+        fs.writeFileSync(
+            path.join(__dirname, eslintIgnore),
+            eslintIngoreRule
+        );
+
+        fs.writeFileSync(
+            path.join(__dirname, gitIgnore),
+            gitIgnoreRule
+        );
+    });
+
+    const cases = [
+        [ 'ignore1/a.js', false ],
+        [ 'ignore2/a.jsx', false ],
+        [ 'ignore3/a.ts', false ],
+        [ 'notignore/a.js', true ],
+        [ 'notignore/a.jsx', true ],
+        [ 'notignore/a.ts', false ]
+    ];
+
+    test('get a filter that does not exclude anything', () => {
+        const filter = getPathFilter(() => true);
+        expect(typeof filter).toBe('function');
+
+        const filteredList = cases.map(item => item[0]).filter(filter);
+        expect(filteredList.length).toBe(cases.length);
+    });
+
+    test('get a filter that only retains .js file', () => {
+        const filter = getPathFilter(filepath => /\.js$/.test(filepath));
+        expect(typeof filter).toBe('function');
+
+        const filteredList = cases.map(item => item[0]).filter(filter);
+        expect(filteredList.length).toBe(2);
+        expect(filteredList.every(filepath => filepath.split('.')[1] === 'js'));
+    });
+
+    test('get null if pass invalid param', () => {
+        const filter = getPathFilter(null);
+        expect(filter).toBe(null);
+    });
+
+    test('get a filter from a config object', () => {
+        const filter = getPathFilter({
+            extensions: ['.js', '.jsx'],
+            ignoreRuleFiles: [eslintIgnore, gitIgnore]
+        }, __dirname);
+        expect(typeof filter).toBe('function');
+
+        const filteredList = cases.map(item => item[0]).filter(filter);
+        cases.forEach(item => {
+            expect(filteredList.includes(item[0])).toBe(item[1]);
+        });
+    });
+
+    // remove files for testing
+    afterAll(() => {
+        execSync([
+            `cd ${__dirname}`,
+            `rm ${eslintIgnore}`,
+            `rm ${gitIgnore}`
         ].join(` && `));
     });
 });
