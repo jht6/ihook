@@ -17,7 +17,8 @@ const getPathFilter = require('./getPathFilter');
  *      type: 'batch',
  *      command: 'eslint <paths>',
  *      filter: () => true,
- *      useRelativePath: true
+ *      useRelativePath: true,
+ *      cwd: '/path/to/cwd'
  *  }
  * @return {Number} exit code, if no error occurs, it's 0, else it's non-zero.
  */
