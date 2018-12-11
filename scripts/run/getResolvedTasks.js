@@ -16,7 +16,7 @@ const errorMsg = {
     [errorCode.NO_TASKS]: `Your config hasn't "tasks" property in "${process.argv[2]}", please check "${CONFIG_FILE_NAME}`
 };
 
-function _resolveTasks(tasks) {
+function resolveTasks(tasks) {
     return tasks.map(task => {
         return typeof task !== 'string' ? task : {
             type: 'common',
@@ -42,7 +42,7 @@ function getResolvedTasks([, , hookName]) {
         return errorCode.NO_TASKS;
     }
 
-    return _resolveTasks(tasks);
+    return resolveTasks(tasks);
 }
 
 getResolvedTasks.errorCode = errorCode;
