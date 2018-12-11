@@ -4,15 +4,11 @@ const execa = require('execa');
 const {
     getGitStatus,
     getFilePathList,
-    getPackageJsonDirPath,
     transPathWinToUnix,
     log
 } = require('../../../../common/utils');
 const { BATCH_CMD_PARAM_TOKEN } = require('../../../../common/const')();
 const getPathFilter = require('./getPathFilter');
-
-const pkgJsonDir = getPackageJsonDirPath();
-
 
 /**
  * Batch task executor
@@ -26,6 +22,8 @@ const pkgJsonDir = getPackageJsonDirPath();
  * @return {Number} exit code, if no error occurs, it's 0, else it's non-zero.
  */
 module.exports = (task) => {
+    const pkgJsonDir = task.cwd;
+
     let command = task.command;
 
     // If batch task command doesn't contain "<paths>", exit process with error.
@@ -36,7 +34,8 @@ module.exports = (task) => {
     // Get file path list from output of "git status --porcelain"
     let pathList = getFilePathList(getGitStatus());
     if (!pathList.length) {
-        log('There is no file to be commited, skip hook.', 0);
+        log('There is no file to be commited, skip hook.');
+        return 0;
     }
 
     // Transform all paths to Unix format.
@@ -54,13 +53,15 @@ module.exports = (task) => {
     if (task.filter) {
         const filter = getPathFilter(task.filter, pkgJsonDir);
         if (!filter) {
-            log(`Error occured when resolving the filter config of batch task, please check it.`, 1);
+            log(`Error occured when resolving the filter config of batch task, please check it.`);
+            return 1;
         }
         pathList = pathList.filter(filter);
     }
 
     if (!pathList.length) {
-        log('There is no file path after filtering, skip hook.', 0);
+        log('There is no file path after filtering, skip hook.');
+        return 0;
     }
 
     // Get command and replace param.
