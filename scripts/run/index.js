@@ -10,9 +10,7 @@ function run() {
     const hookName = process.argv[2];
     let tasks = getResolvedTasks(process.argv);
     if (typeof tasks === 'string') {
-        // TODO: 打印具体的错误信息
-        // 此处先简单打印tasks
-        log(tasks, 1);
+        log('Please modify your ihook.config.js', 1);
     }
 
     try {
