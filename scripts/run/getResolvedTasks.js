@@ -1,4 +1,4 @@
-
+const path = require('path');
 const {
     getConfig
 } = require('../../common/utils');
