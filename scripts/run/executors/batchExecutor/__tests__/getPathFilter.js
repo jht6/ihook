@@ -5,7 +5,6 @@ const path = require('path');
 const getPathFilter = require('../getPathFilter');
 const {
     createExtensionReg,
-    checkExtensions,
     checkIgnoreRuleFilesExist,
     createFilterByConfig
 } = getPathFilter.__tests__;
@@ -30,25 +29,6 @@ describe('#createExtensionReg', () => {
         expect(re.test('pre/ejs')).toBe(false);
         expect(re.test('pre/f.js.x')).toBe(false);
         expect(re.test('pre/f.jsts')).toBe(false);
-    });
-});
-
-test('#checkExtensions', () => {
-    const cases = [
-        [ null, true ],
-        [ {}, true ],
-        [ 'abc', true ],
-        [ [], true ],
-        [ ['.js', 'ts'], false ],
-        [ ['.js'], true ],
-        [ ['.js', '.ts'], true ]
-    ];
-
-    cases.forEach(item => {
-        if (checkExtensions(item[0]) !== item[1]) {
-            console.log(item[0]);
-        }
-        expect(checkExtensions(item[0])).toBe(item[1]);
     });
 });
 

@@ -16,19 +16,6 @@ function createExtensionReg(exts) {
     return RegExp(`\\.(${exts})$`);
 }
 
-// TODO: 后续考虑在流程开始时对配置项进行一个完整的合法性检查
-function checkExtensions(exts) {
-    if (
-        Array.isArray(exts) &&
-        !exts.every(ext => ext.charAt(0) === '.')
-    ) {
-        log('Each item in "filter.extensions" should start with ".", please check it');
-        return false;
-    }
-
-    return true;
-}
-
 /**
  * Check if all ignore rule files exist in package.json's dir
  * @param {Array} ignoreRuleFiles shaped like [".eslintignore", ".gitignore"]
@@ -63,11 +50,7 @@ function createFilterByConfig(config, pkgJsonDir) {
         extensionReg = /[\s\S]*/;
 
     if (Array.isArray(extensions) && extensions.length) {
-        if (checkExtensions(extensions)) {
-            extensionReg = createExtensionReg(extensions);
-        } else {
-            return false;
-        }
+        extensionReg = createExtensionReg(extensions);
     }
 
     // If no ignoreRuleFiles, only filter by extensions.
@@ -115,7 +98,6 @@ module.exports = (filterConfig, pkgJsonDir) => {
 // Just for testing, don't use it outside.
 module.exports.__tests__ = {
     createExtensionReg,
-    checkExtensions,
     checkIgnoreRuleFilesExist,
     createFilterByConfig
 };
