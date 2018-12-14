@@ -27,11 +27,6 @@ module.exports = (task) => {
 
     let command = task.command;
 
-    // If batch task command doesn't contain "<paths>", exit process with error.
-    if (command.indexOf(BATCH_CMD_PARAM_TOKEN) === -1) {
-        log(`There is no "${BATCH_CMD_PARAM_TOKEN}" in batch task config, please check it.`, 1);
-    }
-
     // Get file path list from output of "git status --porcelain"
     let pathList = getFilePathList(getGitStatus());
     if (!pathList.length) {
