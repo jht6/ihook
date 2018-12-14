@@ -74,6 +74,21 @@ test('get TASK_ITEM_LACK_COMMAND if task item lack "command"', () => {
     }, 'pre-commit')).toBe(codes.TASK_ITEM_LACK_COMMAND);
 });
 
+test('get TASK_ITEM_BATCH_COMMAND_NO_PARAM if batch task command lack "<paths>"', () => {
+    expect(checkConfig({
+        hooks: {
+            'pre-commit': {
+                tasks: [
+                    {
+                        type: 'batch',
+                        command: 'echo aaa'
+                    }
+                ]
+            }
+        }
+    }, 'pre-commit')).toBe(codes.TASK_ITEM_BATCH_COMMAND_NO_PARAM);
+});
+
 test('get TASK_ITEM_FILTER_TYPE_INVALID if batch task filter is invalid', () => {
     expect(checkConfig({
         hooks: {
@@ -81,7 +96,7 @@ test('get TASK_ITEM_FILTER_TYPE_INVALID if batch task filter is invalid', () => 
                 tasks: [
                     {
                         type: 'batch',
-                        command: 'echo aaa',
+                        command: 'echo <paths>',
                         filter: 123
                     }
                 ]
@@ -97,7 +112,7 @@ test('get TASK_ITEM_FILTER_IGNORERULEFILES_TYPE_INVALID if batchtask.filter.igno
                 tasks: [
                     {
                         type: 'batch',
-                        command: 'echo aaa',
+                        command: 'echo <paths>',
                         filter: {
                             ignoreRuleFiles: {}
                         }
@@ -115,7 +130,7 @@ test('get TASK_ITEM_FILTER_EXTENSIONS_TYPE_INVALID if batchtask.filter.extension
                 tasks: [
                     {
                         type: 'batch',
-                        command: 'echo aaa',
+                        command: 'echo <paths>',
                         filter: {
                             extensions: {}
                         }
@@ -124,6 +139,24 @@ test('get TASK_ITEM_FILTER_EXTENSIONS_TYPE_INVALID if batchtask.filter.extension
             }
         }
     }, 'pre-commit')).toBe(codes.TASK_ITEM_FILTER_EXTENSIONS_TYPE_INVALID);
+});
+
+test(`get TASK_ITEM_FILTER_EXTENSIONS_FORMAT_INVALID if batchtask.filter.extensions' item is invalid`, () => {
+    expect(checkConfig({
+        hooks: {
+            'pre-commit': {
+                tasks: [
+                    {
+                        type: 'batch',
+                        command: 'echo <paths>',
+                        filter: {
+                            extensions: ['.js', 'ts'] // ts hasn't leading "."
+                        }
+                    }
+                ]
+            }
+        }
+    }, 'pre-commit')).toBe(codes.TASK_ITEM_FILTER_EXTENSIONS_FORMAT_INVALID);
 });
 
 test('get true if config is valid', () => {
@@ -138,10 +171,10 @@ test('get true if config is valid', () => {
                     },
                     {
                         type: 'batch',
-                        command: 'echo aaa',
+                        command: 'echo <paths>',
                         filter: {
                             ignoreRuleFiles: ['.eslintignore'],
-                            extensions: ['.js', 'jsx']
+                            extensions: ['.js', '.jsx']
                         }
                     }
                 ]

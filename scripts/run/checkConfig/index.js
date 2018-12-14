@@ -1,3 +1,4 @@
+const { BATCH_CMD_PARAM_TOKEN } = require('../../../common/const')();
 const codes = require('./codes');
 
 function isObject(o) {
@@ -43,6 +44,10 @@ module.exports = function checkConfig(config, hookName) {
             }
 
             if (task.type === 'batch') {
+                if (task.command.indexOf(BATCH_CMD_PARAM_TOKEN) === -1) {
+                    return codes.TASK_ITEM_BATCH_COMMAND_NO_PARAM;
+                }
+
                 let filter = task.filter;
                 if (
                     typeof filter !== 'undefined' &&
@@ -66,6 +71,10 @@ module.exports = function checkConfig(config, hookName) {
                         !Array.isArray(extensions)
                     ) {
                         return codes.TASK_ITEM_FILTER_EXTENSIONS_TYPE_INVALID;
+                    }
+
+                    if (!extensions.every(ext => ext.charAt(0) === '.')) {
+                        return codes.TASK_ITEM_FILTER_EXTENSIONS_FORMAT_INVALID;
                     }
                 }
             }
