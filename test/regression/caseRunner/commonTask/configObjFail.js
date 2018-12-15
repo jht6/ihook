@@ -4,7 +4,7 @@ module.exports = {
             tasks: [
                 {
                     type: 'common',
-                    command: 'touch common_obj_task_fail && exit 1'
+                    command: 'touch flag_common_obj_task_fail && exit 1'
                 }
             ]
         }

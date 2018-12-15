@@ -12,37 +12,60 @@ function getConfigRelativePath(filename) {
 }
 
 module.exports = () => {
-    describe('common task from string config success', () => {
-        let ok = true;
+    const cases = [
+        {
+            desc: 'run common task from string config and commit successly',
+            committedFile: 'committed_common_str_task_success',
+            configFile: 'configStrSuccess',
+            taskFlagFile: 'flag_common_str_task_success',
+            ok: true
+        },
+        {
+            desc: 'run common task from string config and commit unsuccessfully',
+            committedFile: 'committed_common_str_task_fail',
+            configFile: 'configStrFail',
+            taskFlagFile: 'flag_common_str_task_fail',
+            ok: false
+        },
+        {
+            desc: 'run common task from object config and commit successly',
+            committedFile: 'committed_common_obj_task_success',
+            configFile: 'configObjSuccess',
+            taskFlagFile: 'flag_common_obj_task_success',
+            ok: true
+        },
+        {
+            desc: 'run common task from object config and commit unsuccessfully',
+            committedFile: 'committed_common_obj_task_fail',
+            configFile: 'configObjFail',
+            taskFlagFile: 'flag_common_obj_task_fail',
+            ok: false
+        }
+    ];
 
-        beforeAll(() => {
-            let file = 'test_common_str_task';
+    describe('common task cases', () => {
+        cases.forEach(item => {
+            test(item.desc, () => {
+                let ok = true;
+                let committedFile = item.committedFile;
 
-            try {
-                execSync([
-                    `cp ${getConfigRelativePath('configStrSuccess')} ${TEST_DIR_NAME}/ihook.config.js`,
-                    `cd ${TEST_DIR_NAME}`,
-                    `touch ${file}`,
-                    `git add ${file}`,
-                    `git commit -m test`
-                ].join(' && '));
-            } catch (e) {
-                ok = false;
-            }
-        });
+                try {
+                    execSync([
+                        `cp ${getConfigRelativePath(item.configFile)} ${TEST_DIR_NAME}/ihook.config.js`,
+                        `cd ${TEST_DIR_NAME}`,
+                        `touch ${committedFile}`,
+                        `git add ${committedFile}`,
+                        `git commit -m test`
+                    ].join(' && '));
+                } catch (e) {
+                    ok = false;
+                }
 
-        test('run common task from string config and commit successly', () => {
-            // 期望common_str_task_success文件存在
-            expect(ok).toBe(true);
-            expect(fs.existsSync(
-                path.join(process.cwd(), `${TEST_DIR_NAME}/common_str_task_success`)
-            )).toBe(true);
-        });
-
-        afterAll(() => {
-            execSync(`rm ${TEST_DIR_NAME}/common_str_task_success`);
+                expect(ok).toBe(item.ok);
+                expect(fs.existsSync(
+                    path.join(process.cwd(), `${TEST_DIR_NAME}/${item.taskFlagFile}`)
+                )).toBe(true);
+            });
         });
     });
-
-    // TODO: 用相同形式对其余3种config文件进行测试
 };
