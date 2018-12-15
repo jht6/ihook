@@ -1,11 +1,11 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
 
-const { CONFIG_FILE_NAME } = require('../../../common/const')();
-const { TEST_DIR_NAME } = require('../const');
+const { CONFIG_FILE_NAME } = require('../../../../common/const')();
+const { TEST_DIR_NAME } = require('../../const');
 
 module.exports = () => {
-    // Run install.js.
+    // Run install.js
     describe('regression - install.js', () => {
         let ok = true;
 
