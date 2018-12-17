@@ -18,54 +18,69 @@ module.exports = () => {
                 `touch index.js`,
                 `mkdir ignore`,
                 `cd ignore`,
-                `touch a.js b.js`,
+                `touch a.js b.ts c.css`,
                 `cd ..`,
                 `mkdir notignore`,
                 `cd notignore`,
-                `touch a.js b.js`
+                `touch a.js b.ts c.css`
             ].join(' && '));
         });
 
-        test('run batch task and commit unsuccessfully', () => {
-            let ok = true;
-
-            try {
-                execSync([
-                    `cp ${getConfigRelativePath('configFail', __dirname)} ${TEST_DIR_NAME}/ihook.config.js`,
-                    `cd ${TEST_DIR_NAME}/${batchDir}`,
-                    `git add .`,
-                    `git commit -m test_batch`
-                ].join(' && '));
-            } catch (e) {
-                ok = false;
+        const cases = [
+            {
+                desc: 'run batch task and commit unsuccessfully',
+                configFile: 'configFail',
+                taskFlagFile: 'flag_batch_task_fail',
+                ok: false
+            },
+            {
+                desc: 'run batch task and commit successfully',
+                configFile: 'configSuccess',
+                taskFlagFile: 'flag_batch_task_success',
+                ok: true
+            },
+            {
+                desc: 'run batch task with filter(function) and commit successfully',
+                configFile: 'configFnFilterSuccess',
+                taskFlagFile: 'flag_batch_task_fn_filter_success',
+                ok: true
+            },
+            {
+                desc: 'run batch task with filter(object) and commit successfully',
+                configFile: 'configObjFilterSuccess',
+                taskFlagFile: 'flag_batch_task_obj_filter_success',
+                ok: true
             }
+        ];
+        const shouldResetStartIndex = 1;
 
-            expect(ok).toBe(false);
-            expect(fs.existsSync(
-                path.join(process.cwd(), `${TEST_DIR_NAME}/flag_batch_task_fail`)
-            )).toBe(true);
+        cases.forEach((item, index) => {
+            test(item.desc, () => {
+                if (index > shouldResetStartIndex) {
+                    execSync([
+                        `cd ${TEST_DIR_NAME}`,
+                        `git reset HEAD~1` // 'git reset HEAD^' is ineffective here, so use 'git reset HEAD~1'
+                    ].join(' && '));
+                }
+
+                let ok = true;
+
+                try {
+                    execSync([
+                        `cp ${getConfigRelativePath(item.configFile, __dirname)} ${TEST_DIR_NAME}/ihook.config.js`,
+                        `cd ${TEST_DIR_NAME}/${batchDir}`,
+                        `git add .`,
+                        `git commit -m test`
+                    ].join(' && '));
+                } catch (e) {
+                    ok = false;
+                }
+
+                expect(ok).toBe(item.ok);
+                expect(fs.existsSync(
+                    path.join(process.cwd(), `${TEST_DIR_NAME}/${item.taskFlagFile}`)
+                )).toBe(true);
+            });
         });
-
-        test('run batch task and commit successfully', () => {
-            let ok = true;
-
-            try {
-                execSync([
-                    `cp ${getConfigRelativePath('configSuccess', __dirname)} ${TEST_DIR_NAME}/ihook.config.js`,
-                    `cd ${TEST_DIR_NAME}/${batchDir}`,
-                    `git add .`,
-                    `git commit -m test_batch`
-                ].join(' && '));
-            } catch (e) {
-                ok = false;
-            }
-
-            expect(ok).toBe(true);
-            expect(fs.existsSync(
-                path.join(process.cwd(), `${TEST_DIR_NAME}/flag_batch_task_success`)
-            )).toBe(true);
-        });
-
-        // TODO: 含filter的测试
     });
 };
