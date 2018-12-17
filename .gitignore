@@ -3,3 +3,6 @@ npm-debug.log
 
 # A directory that will be created temporarily for testing, and will be remove when testing ends.
 sandbox/
+
+# A directory that used to cache ihook‘s npm dependencies for regression test.
+rtcache/
