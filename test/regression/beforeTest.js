@@ -3,10 +3,12 @@
  */
 
 const fs = require('fs');
+const path = require('path');
 const { execSync } = require('child_process');
 
 const { log } = require('../../common/utils');
 
+const cacheDir = 'rtcache';
 
 module.exports = testDirName => {
 
@@ -51,13 +53,23 @@ module.exports = testDirName => {
         log(`Error occured when copy code file to sandbox, skip testing.`, 0);
     }
 
-    // Install dependence for copied code.
-    try {
-        execSync([
-            `cd ${testDirName}/node_modules/ihook`,
-            `npm install --production`
-        ].join(` && `));
-    } catch (e) {
-        log(`Error occured when install dependence for copied code in sandbox, skip testing.`, 0);
+    if (
+        fs.existsSync(
+            path.join(process.cwd(), cacheDir)
+        )
+    ) {
+        // use cache if it is available
+        execSync(`cp -r ${cacheDir} ${testDirName}/node_modules/ihook/node_modules`);
+    } else {
+        // if no cache available, download by npm and save dependencies as cache
+        try {
+            execSync([
+                `cd ${testDirName}/node_modules/ihook`,
+                `npm install --production`,
+                `cp -r node_modules ../../../${cacheDir}`
+            ].join(` && `));
+        } catch (e) {
+            log(`Error occured when install dependence for copied code in sandbox, skip testing.`, 0);
+        }
     }
 };
