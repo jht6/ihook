@@ -8,7 +8,7 @@ const getConfigRelativePath = require('../getConfigRelativePath');
 module.exports = () => {
     const cases = [
         {
-            desc: 'run common task from string config and commit successly',
+            desc: 'run common task from string config and commit successfully',
             committedFile: 'committed_common_str_task_success',
             configFile: 'configStrSuccess',
             taskFlagFile: 'flag_common_str_task_success',
@@ -22,7 +22,7 @@ module.exports = () => {
             ok: false
         },
         {
-            desc: 'run common task from object config and commit successly',
+            desc: 'run common task from object config and commit successfully',
             committedFile: 'committed_common_obj_task_success',
             configFile: 'configObjSuccess',
             taskFlagFile: 'flag_common_obj_task_success',
