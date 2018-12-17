@@ -3,13 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { TEST_DIR_NAME } = require('../../const');
-
-function getConfigRelativePath(filename) {
-    return path.relative(
-        process.cwd(),
-        path.join(__dirname, `${filename}.js`)
-    );
-}
+const getConfigRelativePath = require('../getConfigRelativePath');
 
 module.exports = () => {
     const cases = [
@@ -51,7 +45,7 @@ module.exports = () => {
 
                 try {
                     execSync([
-                        `cp ${getConfigRelativePath(item.configFile)} ${TEST_DIR_NAME}/ihook.config.js`,
+                        `cp ${getConfigRelativePath(item.configFile, __dirname)} ${TEST_DIR_NAME}/ihook.config.js`,
                         `cd ${TEST_DIR_NAME}`,
                         `touch ${committedFile}`,
                         `git add ${committedFile}`,
