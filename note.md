@@ -1,3 +1,10 @@
+
+2018.12.17
+关于 [npm run] 的执行流程:
+npm run lint -> 执行c/program file/nodejs/npm -> node ./node_modules/npm/bin/npm-cli.js ->
+./node_modules/npm/lib/run-script.js
+
+
 ==============================
 TODO:
 
