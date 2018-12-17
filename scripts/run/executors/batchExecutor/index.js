@@ -17,7 +17,6 @@ const getPathFilter = require('./getPathFilter');
  *      type: 'batch',
  *      command: 'eslint <paths>',
  *      filter: () => true,
- *      useRelativePath: true,
  *      cwd: '/path/to/cwd'
  *  }
  * @return {Number} exit code, if no error occurs, it's 0, else it's non-zero.
@@ -38,13 +37,10 @@ module.exports = (task) => {
     // For example: 'C:\\a\\b' -> '/C/a/b'.
     pathList = pathList.map(transPathWinToUnix);
 
-    // If "useRelativePath" is true, transform absolute paths to relative paths(relative to packageJsonDir).
-    const PKG_JSON_DIR_PATH_UNIX = transPathWinToUnix(pkgJsonDir);
-    if (task.useRelativePath === true) {
-        pathList = pathList.map(
-            item => path.relative(PKG_JSON_DIR_PATH_UNIX, item)
-        );
-    }
+    // transform absolute paths to relative paths(relative to packageJsonDir).
+    pathList = pathList.map(
+        item => path.relative(transPathWinToUnix(pkgJsonDir), item)
+    );
 
     if (task.filter) {
         const filter = getPathFilter(task.filter, pkgJsonDir);
