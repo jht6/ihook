@@ -20,6 +20,30 @@ spawn(
 );
 
 
+而execa.shellSync()最终也是调用child_process.spawn()创建子进程执行命令：
+spawn(
+    'C:\Windows\system32\cmd.exe',
+    ['/d', '/s', '/c', '"eslint ."'],
+    {
+        buffer: true
+        cleanup: true
+        cwd: "C:\code\ihook"
+        encoding: "utf8"
+        env: {
+            PATH: 'C:\code\ihook\node_modules\.bin;C:\code\node_modules\.bin;C:\node_modules\.bin;C:\Program Files\nodejs;...'
+        }
+        extendEnv: true
+        localDir: "C:\code\ihook"
+        maxBuffer: 10000000
+        preferLocal: true
+        reject: true
+        stdio: [null, null, null]
+        stripEof: true
+        windowsVerbatimArguments: true
+    }
+);
+
+
 ==============================
 TODO:
 
