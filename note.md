@@ -2,7 +2,22 @@
 2018.12.17
 关于 [npm run] 的执行流程:
 npm run lint -> 执行c/program file/nodejs/npm -> node ./node_modules/npm/bin/npm-cli.js ->
-./node_modules/npm/lib/run-script.js
+./node_modules/npm/lib/run-script.js -> npm/node_modules/npm-lifecycle/index.js
+
+最终是调用child_process.spawn()创建子进程执行命令：
+spawn(
+    'C:\Windows\system32\cmd.exe',
+    ['/d /s /c', 'eslint .'],
+    {
+        cwd: 'C:\code\ihook',
+        env: {
+            ...,
+            PATH: '...内含C:\code\ihook\node_modules\.bin'
+        },
+        stdio: [0, 1, 2],
+        windowsVerbatimArguments: true
+    }
+);
 
 
 ==============================
