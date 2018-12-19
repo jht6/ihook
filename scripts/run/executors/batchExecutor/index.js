@@ -62,6 +62,8 @@ module.exports = (task) => {
     let exitCode = 0;
 
     try {
+        log(`run "${command}"`);
+
         execa.shellSync(command, {
             cwd: task.cwd,
             stdio: 'inherit'

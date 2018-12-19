@@ -1,4 +1,5 @@
 const execa = require('execa');
+const { log } = require('../../../../common/utils');
 
 /**
  * Common task executor
@@ -9,6 +10,8 @@ module.exports = (task) => {
     let exitCode = 0;
 
     try {
+        log(`run "${task.command}"`);
+
         execa.shellSync(task.command, {
             cwd: task.cwd,
             stdio: 'inherit'
