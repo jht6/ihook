@@ -37,4 +37,24 @@ module.exports = () => {
             ).toBe(true);
         });
     });
+
+    describe('regression - install again', () => {
+        beforeAll(() => {
+            execSync([
+                `cd ${TEST_DIR_NAME}`,
+                `echo i_love_tsy> ${CONFIG_FILE_NAME}`,
+                `node ./node_modules/ihook/scripts/install/index.js`
+            ].join(` && `));
+        });
+
+        test(`don't copy "${CONFIG_FILE_NAME}" if it already exists`, () => {
+            expect(
+                fs.existsSync(`./${TEST_DIR_NAME}/${CONFIG_FILE_NAME}`)
+            ).toBe(true);
+            expect(
+                // to get rid of EOL, we only compare the first ten chars here
+                fs.readFileSync(`./${TEST_DIR_NAME}/${CONFIG_FILE_NAME}`).toString().slice(0, 10)
+            ).toBe(`i_love_tsy`);
+        });
+    });
 };

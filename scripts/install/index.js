@@ -83,10 +83,14 @@ function backupExistedHook(hookPath) {
 }
 
 function copyConfigFileToPkgDir() {
-    fsExtra.copySync(
-        path.join(__dirname, CONFIG_FILE_NAME),
-        path.join(getPackageJsonDirPath(), CONFIG_FILE_NAME)
-    );
+    const targetPath = path.join(getPackageJsonDirPath(), CONFIG_FILE_NAME);
+    // if "ihook.config.js" exists, do not override it.
+    if (!fs.existsSync(targetPath)) {
+        fsExtra.copySync(
+            path.join(__dirname, CONFIG_FILE_NAME),
+            targetPath
+        );
+    }
 }
 
 function install() {
