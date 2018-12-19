@@ -1,6 +1,10 @@
 const { BATCH_CMD_PARAM_TOKEN } = require('../../../common/const')();
 const codes = require('./codes');
 
+const hooksCanUseBatch = [
+    'pre-commit'
+];
+
 function isObject(o) {
     return Object.prototype.toString.call(o) === '[object Object]';
 }
@@ -44,6 +48,10 @@ module.exports = function checkConfig(config, hookName) {
             }
 
             if (task.type === 'batch') {
+                if (!hooksCanUseBatch.includes(hookName)) {
+                    return codes.TASI_ITEM_NOT_SUPPORT_BATCH;
+                }
+
                 if (task.command.indexOf(BATCH_CMD_PARAM_TOKEN) === -1) {
                     return codes.TASK_ITEM_BATCH_COMMAND_NO_PARAM;
                 }

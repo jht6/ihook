@@ -60,6 +60,21 @@ test('get TASK_ITEM_LACK_TYPE if task item lack "type"', () => {
     }, 'pre-commit')).toBe(codes.TASK_ITEM_LACK_TYPE);
 });
 
+test(`get TASI_ITEM_NOT_SUPPORT_BATCH if task item's type is "batch" when hook don't support`, () => {
+    expect(checkConfig({
+        hooks: {
+            'update': {
+                tasks: [
+                    {
+                        type: 'batch',
+                        command: 'echo 123'
+                    }
+                ]
+            }
+        }
+    }, 'update')).toBe(codes.TASI_ITEM_NOT_SUPPORT_BATCH);
+});
+
 test('get TASK_ITEM_LACK_COMMAND if task item lack "command"', () => {
     expect(checkConfig({
         hooks: {
