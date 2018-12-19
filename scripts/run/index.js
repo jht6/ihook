@@ -13,24 +13,29 @@ function run() {
         log('Please modify your ihook.config.js', 1);
     }
 
+    let exitCode = 0;
     try {
         tasks.forEach(task => {
             let executor = executors[task.type];
-            let exitCode = executor(task);
-            if (exitCode !== 0) {
-                log('hook failed', exitCode);
+            let code = executor(task);
+            if (code !== 0) {
+                exitCode = code;
             }
         });
     } catch (e) {
+        exitCode = 1;
+    }
+
+    if (exitCode !== 0) {
         const canBypassHooks = [
             'commit-msg',
             'pre-commit',
             'pre-rebase',
             'pre-push'
-        ].includes(hookName)
-            ? '(add "--no-verify" or "-n" to bypass Git hook)'
-            : '(cannot be bypassed with --no-verify due to Git specs)';
-        log(`${hookName} hook failed ${canBypassHooks}`, e.code || 1);
+        ].includes(hookName) ?
+            '(add "--no-verify" or "-n" to bypass Git hook)' :
+            '(cannot be bypassed with --no-verify due to Git specs)';
+        log(`"${hookName}" hook failed, ${canBypassHooks}`, exitCode);
     }
 }
 
