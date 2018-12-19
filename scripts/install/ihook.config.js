@@ -6,14 +6,18 @@ module.exports = {
     hooks: {
         'pre-commit': {
             tasks: [
-                'echo ihook task is run.',
+                'echo ihook common task(from string config) is executed...',
                 {
                     type: 'common',
-                    command: 'echo ihook common task is run.'
+                    command: 'echo ihook common task(from object config) is executed...'
                 },
                 {
                     type: 'batch',
-                    command: 'echo <paths>'
+                    filter: {
+                        extensions: ['.js'],
+                        ignoreRuleFiles: ['.eslintignore']
+                    },
+                    command: 'eslint <paths>'
                 }
             ]
         }

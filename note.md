@@ -3,7 +3,7 @@
 TODO:
 (Done) 1. task执行失败时，若可以加-n参数， 应打出该提示。 （scripts/run/index.js）
 (Done) 2. 非pre-commit钩子的task不支持batch类型task，应对ihook.config.js做检查。
-3. 安装时，若已存在ihook.config.js， 则不覆盖已有文件。
+(Done) 3. 安装时，若已存在ihook.config.js， 则不覆盖已有文件。
 4. 默认ihook.config.js的配置如何设置。
 
 ==========================
