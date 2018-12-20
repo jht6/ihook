@@ -31,7 +31,27 @@ function checkBeforeInstall() {
 }
 
 function createHooks(hooksDirPath) {
-    let hookNames = ['pre-commit'];
+    let hookNames = [
+        'applypatch-msg',
+        'pre-applypatch',
+        'post-applypatch',
+        'pre-commit',
+        'prepare-commit-msg',
+        'commit-msg',
+        'post-commit',
+        'pre-rebase',
+        'post-checkout',
+        'post-merge',
+        'pre-push',
+        'pre-receive',
+        'update',
+        'post-receive',
+        'post-update',
+        'push-to-checkout',
+        'pre-auto-gc',
+        'post-rewrite',
+        'sendemail-validate'
+    ];
     let hookPaths = hookNames.map(name => path.resolve(hooksDirPath, name));
     hookPaths.forEach(path => {
         writeCodeToHook(path);
