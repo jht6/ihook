@@ -13,6 +13,11 @@ module.exports = {
                 },
                 {
                     type: 'batch',
+                    filter: filepath => /\.js$/.test(filepath),
+                    command: 'echo <paths>'
+                },
+                {
+                    type: 'batch',
                     filter: {
                         extensions: ['.js'],
                         ignoreRuleFiles: ['.eslintignore']
