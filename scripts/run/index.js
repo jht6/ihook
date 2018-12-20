@@ -5,12 +5,23 @@ const {
 } = require('../../common/utils');
 const getResolvedTasks = require('./getResolvedTasks');
 const executors = require('./executors');
+const codes = require('./checkConfig/codes');
 
 function run() {
     const hookName = process.argv[2];
     let tasks = getResolvedTasks(process.argv);
     if (typeof tasks === 'string') {
-        log('Please modify your ihook.config.js', 1);
+        if (tasks === codes.SKIP_HOOK_SILENT) {
+            process.exit(0);
+        } else if (tasks === codes.SKIP_HOOK) {
+            log('Hooks config is empty, skip hook', 0);
+        } else {
+            log([
+                `Your ihook.config.js config is invalid`,
+                `Error Code: ${tasks}`,
+                'Please modify your ihook.config.js'
+            ], 1);
+        }
     }
 
     let exitCode = 0;
