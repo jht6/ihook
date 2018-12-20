@@ -20,7 +20,7 @@ module.exports = function checkConfig(config, hookName) {
 
     let hookConfig = config.hooks[hookName];
     if (typeof hookConfig === 'undefined') {
-        return codes.SKIP_HOOK;
+        return codes.SKIP_HOOK_SILENT;
     }
 
     if (!isObject(hookConfig)) {

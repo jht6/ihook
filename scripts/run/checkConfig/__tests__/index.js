@@ -12,10 +12,10 @@ test('get HOOKS_INVALID if config.hooks is not an object', () => {
     })).toBe(codes.HOOKS_INVALID);
 });
 
-test('get SKIP_HOOK if config.hooks does not contain specified hook', () => {
+test('get SKIP_HOOK_SILENT if config.hooks does not contain specified hook', () => {
     expect(checkConfig({
         hooks: {}
-    }, 'pre-commit')).toBe(codes.SKIP_HOOK);
+    }, 'pre-commit')).toBe(codes.SKIP_HOOK_SILENT);
 });
 
 test('get HOOK_CONFIG_INVALID if hooks[hookName] is not an object', () => {
