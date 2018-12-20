@@ -1,3 +1,8 @@
+## 1.0.0
+- Support for config file "ihook.config.js"
+- Support for common task(for all hooks) and batch task(only for "pre-commit" hook)
+- Support for multitask on one hook
+
 ## 0.0.3
 - Remove all code about "pce-foreach".
 
