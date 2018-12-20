@@ -6,6 +6,9 @@ getFilePathList()的过滤问题
 https://backlog.com/git-tutorial/git-workflow/
 https://git-scm.com/docs/git-status
 
+状态位中的"C"无需关注，Git官方文档上面是错的，因为根本就不会有"C"。
+https://stackoverflow.com/questions/27198414/git-status-git-diff-c-not-detecting-file-copy-in-index
+
 =========================
 
 2018.12.19

@@ -5,7 +5,7 @@ const getGitRootDirPath = require('./getGitRootDirPath');
 
 /**
  * Get list of absolute file paths from string of git status, only retaining
- * paths of new and modified file.
+ * paths of files which are being committed.
  * @param {String} gitStatusStr output of running "git status --porcelain"
  * @param {Object} testFlag just for testing.
  * @return {Array} list of paths
