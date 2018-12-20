@@ -55,8 +55,8 @@ module.exports = {
 ### task介绍
 
 task分为 `common` 和 `batch` 两种类型，配置字段有：
-* type: task类型
-* command: task要执行的命令
+- type: task类型
+- command: task要执行的命令
 
 **注意：`batch` 类型任务当前只支持在 `pre-commit` 钩子中配置使用。**
 
@@ -64,13 +64,13 @@ task分为 `common` 和 `batch` 两种类型，配置字段有：
 
 用于配置要执行的命令, 支持两种声明方式：
 
-1. 字符串形式，例如：
+- 字符串形式，例如：
 
 ```
 'eslint .'
 ```
 
-2. 对象形式， 例如：
+- 对象形式， 例如：
 ```
 {
     type: 'common',
@@ -84,7 +84,7 @@ task分为 `common` 和 `batch` 两种类型，配置字段有：
 
 用于提取出commit时要提交的文件路径列表并作为执行命令的参数，注意：
 
-1. command中必须含有参数占位符 `<paths>`，例如：
+- command中必须含有参数占位符 `<paths>`，例如：
 
 ```
 {
@@ -93,36 +93,37 @@ task分为 `common` 和 `batch` 两种类型，配置字段有：
 }
 ```
 
-2. 可以使用filter指定文件路径的过滤规则，满足规则的才会被保留下来并作为命令参数。filter支持 *函数* 和 *对象* 两种形式的配置。
+- 可以使用filter指定文件路径的过滤规则，满足规则的才会被保留下来并作为命令参数。filter支持 *函数* 和 *对象* 两种形式的配置。
 
-若 `filter` 声明为函数，该函数会被用于过滤文件路径列表。它每次被调用时会接收一个文件路径，若它返回true则该文件路径会保留，否则会被剔除。例如下面的配置会使输出内容中只含 `.js` 类型文件的路径：
-```
-{
-    type: 'batch',
-    filter: filepath => /\.js$/.test(filepath),
-    command: 'echo <paths>'
-}
-```
+    - 若 `filter` 声明为函数，该函数会被用于过滤文件路径列表。它每次被调用时会接收一个文件路径，若它返回true则该文件路径会保留，否则会被剔除。例如下面的配置会使输出内容中只含 `.js` 类型文件的路径：
+        
+        ```
+        {
+            type: 'batch',
+            filter: filepath => /\.js$/.test(filepath),
+            command: 'echo <paths>'
+        }
+        ```
 
-若 `filter` 声明为对象，则有两个可选配置可以使用：
-* extensions：一个包含扩展名的数组。如果一个文件路径的扩展名在extensions中存在，则该路径被保留，否则就会被剔除。注意：每项扩展名 **必须** 以"."开头。例如以下配置只会保留路径列表中 `.js` 类型文件的路径：
+    - 若 `filter` 声明为对象，则有两个可选配置可以使用：
+        - extensions：一个包含扩展名的数组。如果一个文件路径的扩展名在extensions中存在，则该路径被保留，否则就会被剔除。注意：每项扩展名 **必须** 以"."开头。例如以下配置只会保留路径列表中 `.js` 类型文件的路径：
 
-```
-{
-    extensions: ['.js']
-}
-```
+            ```
+            {
+                extensions: ['.js']
+            }
+            ```
 
-* ignoreRuleFiles：一个包含文件名的数组，用于指定一组含排除规则的文件（例如.eslintignore, .gitignore这种）。注意：所指定的文件 **必须** 存在于pkgJsonDir目录内（这也是通常.eslintignore所在的位置）。若配置了此项，ihook会根据所指定文件内声明的规则将一些文件路径排除掉。例如以下配置会只保留 `.js` 类型文件的路径且排除掉所有被 `.eslintignore` 内规则命中的路径：
+        - ignoreRuleFiles：一个包含文件名的数组，用于指定一组含排除规则的文件（例如.eslintignore, .gitignore这种）。注意：所指定的文件 **必须** 存在于pkgJsonDir目录内（这也是通常.eslintignore所在的位置）。若配置了此项，ihook会根据所指定文件内声明的规则将一些文件路径排除掉。例如以下配置会只保留 `.js` 类型文件的路径且排除掉所有被 `.eslintignore` 内规则命中的路径：
 
-```
-{
-    filter: {
-        extensions: ['.js'],
-        ignoreRuleFiles: ['.eslintignore']
-    }
-}
-```
+            ```
+            {
+                filter: {
+                    extensions: ['.js'],
+                    ignoreRuleFiles: ['.eslintignore']
+                }
+            }
+            ```
 
 **再次提醒：`batch` 类型任务当前只支持在 `pre-commit` 钩子中配置使用。**
 
