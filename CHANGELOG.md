@@ -1,3 +1,6 @@
+## 1.0.1
+- Fix #8: getFilePathList() should filter paths correctly.
+
 ## 1.0.0
 - Support for config file "ihook.config.js"
 - Support for common task(for all hooks) and batch task(only for "pre-commit" hook)
