@@ -15,7 +15,7 @@ module.exports = () => {
     } catch (e) {
         log([
             'Maybe you are using CMD to run testing on Windows system.',
-            'There are some shell scripts in testing code for convenience,',
+            'There are some Unix Shell scripts in testing code for convenience,',
             'so please use a terminal that support Unix Shell such as git-bash'
         ], 0);
     }
