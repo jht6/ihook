@@ -2,16 +2,14 @@
   "name": "ihook",
   "version": "1.0.1",
   "description": "Intelligent git hook: easy-to-use, powerful and programmable",
-  "main": "index.js",
+  "main": "scripts/run/index.js",
   "scripts": {
-    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --timeout 60000",
     "install": "node ./scripts/install/index.js",
     "lint": "eslint .",
     "test": "jest --silent",
     "ut": "jest --silent --testPathPattern __tests__/*",
     "rt": "jest --silent --testPathPattern regression/*",
     "rt-s": "jest --testPathPattern regression/* --config test/__jest__/config.rts.js",
-    "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- test.js",
     "uninstall": "node uninstall.js"
   },
   "repository": {
@@ -40,7 +38,6 @@
   },
   "devDependencies": {
     "eslint": "^5.4.0",
-    "istanbul": "0.4.x",
     "jest": "^23.6.0"
   },
   "engines": {
