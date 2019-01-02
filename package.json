@@ -1,6 +1,6 @@
 {
   "name": "ihook",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Intelligent git hook: easy-to-use, powerful and programmable",
   "main": "scripts/run/index.js",
   "scripts": {
@@ -41,7 +41,7 @@
     "jest": "^23.6.0"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "jest": {
     "globalSetup": "<rootDir>/test/__jest__/setup.js"

@@ -1,3 +1,6 @@
+## 1.0.2
+- change Nodejs version requirement to >=8.0.0
+
 ## 1.0.1
 - Fix #8: getFilePathList() should filter paths correctly.
 
