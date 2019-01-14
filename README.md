@@ -4,117 +4,131 @@
 
 [version]: https://img.shields.io/npm/v/ihook.svg?style=flat-square
 
-[中文 README](README-zh_CN.md)
+**ihook** is a Git hooks tool, it can install git hooks automatically and run your prepared tasks when a git hook is triggered.
 
-**ihook** is a git hook installer. It will ensure that
-your `npm test` (or other specified scripts) passes before you can commit your
-changes. This all conveniently configured in your `package.json`.
+## Install
 
-But don't worry, you can still force a commit by telling `git` to skip the
-`pre-commit` hooks by simply committing using `--no-verify` or `-n`.
-
-### Installation
-
-It's advised to install the **ihook** module as a `devDependencies` in your
-`package.json` as you only need this for development purposes. To install the
-module simply run:
+It is adviced to install `ihook` as a `devDependencies` type, because it is usually used in development. Run the command below to install:
 
 ```
 npm install --save-dev ihook
 ```
 
-To install it as `devDependency`. When this module is installed it will override
-the existing `pre-commit` file in your `.git/hooks` folder. Existing
-`pre-commit` hooks will be backed up as `pre-commit.old` in the same repository.
+When `ihook` is installing, new hook files will be added into `.git/hooks` directory. If a hook exists already, `.old` suffix will be appended to it's file name. For example, `pre-commit` will be changed to `pre-commit.old`.
 
-### Configuration
+## Config
 
-`ihook` will try to run your `npm test` command in the directory contians `package.json` by default unless it's the default value that is set by the `npm
-init` script. 
+After installing, a `ihook.config.js` file will be created in the directory which contains `package.json`. It contains a simple config example as follows:
 
-But `ihook` is not limited to just running your `npm test`'s during the
-commit hook. It's also capable of running every other script that you've
-specified in your `package.json` "scripts" field. So before people commit you
-could ensure that:
+```
+module.exports = {
+    hooks: {
+        'pre-commit': {
+            tasks: [
+                'echo ihook common task(from string config) is executed...',
+                {
+                    type: 'common',
+                    command: 'echo ihook common task(from object config) is executed...'
+                },
+                {
+                    type: 'batch',
+                    filter: filepath => /\.js$/.test(filepath),
+                    command: 'echo <paths>'
+                },
+                {
+                    type: 'batch',
+                    filter: {
+                        extensions: ['.js'],
+                        ignoreRuleFiles: ['.eslintignore']
+                    },
+                    command: 'eslint <paths>'
+                }
+            ]
+        }
+    }
+};
+```
 
-- You have 100% coverage
-- All styling passes.
-- JSHint passes.
-- Contribution licenses signed etc.
+Above config means：
 
-The only thing you need to do is add a `pre-commit` array to your `package.json`
-that specifies which scripts you want to have ran and in which order:
+All commands in `tasks` will be executed in sequence when `pre-commit` hook is triggered. If all commands complete successly (exit code is 0), `pre-commit` hook passes, `git commit` can commit successly. If any task fails (like eslint fails), `pre-commit` will fail, `git commit` can not commit.
 
-```js
+### Introduction to "task"
+
+Item of `tasks` has two types: `common` and `batch`, and it's config fields are:
+- type: type of task
+- command: command should be executed
+
+**Notice：`batch` task is only supported in `pre-commit` hook**
+
+#### Introduction to *common task*
+
+There are two ways to configure common task:
+
+- String style, for example：
+
+```
+'eslint .'
+```
+
+- Object style, for example：
+```
 {
-  "name": "437464d0899504fb6b7b",
-  "version": "0.0.0",
-  "description": "ERROR: No README.md file found!",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1",
-    "foo": "echo \"fooo\" && exit 0",
-    "bar": "echo \"bar\" && exit 0"
-  },
-  "pre-commit": [
-    "foo",
-    "bar",
-    "test"
-  ]
+    type: 'common',
+    command: 'eslint .'
 }
 ```
 
-In the example above, it will first run: `npm run foo` then `npm run bar` and
-finally `npm run test` which will make the commit fail as it returns the error
-code `1`.  If you prefer strings over arrays or `precommit` without a middle
-dash, that also works:
 
-```js
+
+#### Introduction to *batch task*
+
+It is used to extract file paths which is being committed, and use the file paths as command param. Notice:
+
+- "command" must contain param token `<paths>`, for example:
+
+```
 {
-  "precommit": "foo, bar, test"
-  "pre-commit": "foo, bar, test"
-  "pre-commit": ["foo", "bar", "test"]
-  "precommit": ["foo", "bar", "test"],
-  "precommit": {
-    "run": "foo, bar, test",
-  },
-  "pre-commit": {
-    "run": ["foo", "bar", "test"],
-  },
-  "precommit": {
-    "run": ["foo", "bar", "test"],
-  },
-  "pre-commit": {
-    "run": "foo, bar, test",
-  }
+    type: 'batch',
+    command: 'echo <paths>'
 }
 ```
 
-The examples above are all the same. In addition to configuring which scripts
-should be ran you can also configure the following options:
+- You can use `filter` to config a rule of excluding file paths. It can be a *string* or a *function*.
 
-- **silent** Don't output the prefixed `pre-commit:` messages when things fail
-  or when we have nothing to run. Should be a boolean.
-- **template** Path to a file who's content should be used as template for the git commit body.
+    - if `filter` is a function, it is used as a filter function. When it is called, it accept a file path, and the file path will be remained if it return `true`, else excluded.
+        
+        ```
+        {
+            type: 'batch',
+            filter: filepath => /\.js$/.test(filepath),
+            command: 'echo <paths>'
+        }
+        ```
 
-These options can either be added in the `pre-commit`/`precommit` object as keys
-or as `"pre-commit.{key}` key properties in the `package.json`:
+    - if `filter` is an object, two config fields are available:
+        - extensions: an array of extensions. If a file path's extension in the array, the file path will be remained, else excluded. Notice: each extension **must** start with ".". For example, below config will remain `.js` files only.
 
-```js
-{
-  "precommit.silent": true,
-  "pre-commit": {
-    "silent": true
-  }
-}
-```
+            ```
+            {
+                extensions: ['.js']
+            }
+            ```
 
-It's all the same. Different styles so use what matches your project. To learn
-more about the scripts, please read the official `npm` documentation:
+        - ignoreRuleFiles: an array of filenames. It is used to assign some exclusionary rule (like .eslintignore, .gitignore). Notice: the assigned file **must** be in the directory which contains `package.json`. If you config `ignoreRuleFiles`, any file path will be excluded if it match the rule in the assigned files. For example, below config will remain `.js` files and exclude all files whose path match rules in `.eslintignore`.
 
-https://npmjs.org/doc/scripts.html
+            ```
+            {
+                filter: {
+                    extensions: ['.js'],
+                    ignoreRuleFiles: ['.eslintignore']
+                }
+            }
+            ```
 
-And to learn more about git hooks read:
+**Notice Again：`batch` task is only supported in `pre-commit` hook**
+
+If you want know more about git hooks, please read:
 
 http://githooks.com
 
