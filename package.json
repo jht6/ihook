@@ -1,6 +1,6 @@
 {
   "name": "ihook",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Intelligent git hook: easy-to-use, powerful and programmable",
   "main": "scripts/run/index.js",
   "scripts": {
