@@ -4,6 +4,8 @@
 
 [version]: https://img.shields.io/npm/v/ihook.svg?style=flat-square
 
+[中文 README](README-zh_CN.md)
+
 **ihook** is a Git hooks tool, it can install git hooks automatically and run your prepared tasks when a git hook is triggered.
 
 ## Install
